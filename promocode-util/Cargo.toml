@@ -1,0 +1,8 @@
+[package]
+name = "promocode-util"
+version = "0.1.0"
+edition.workspace = true
+license-file.workspace = true
+authors.workspace = true
+
+[dependencies]

@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "promocode-client",
+    "promocode-server",
+    "promocode-models",
+    "promocode-util",
+]
+
+[workspace.package]
+authors = ["gouvinb"]
+edition = "2021"
+license-file = "<workspace_dir>/LICENCES.md"
