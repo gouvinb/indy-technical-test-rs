@@ -1,0 +1,81 @@
+#array_width = 60                         ### use_small_heuristics = "Default"
+#attr_fn_like_width = 70                  ### use_small_heuristics = "Default"
+#binop_separator = "Front"                ### Unstable: tracking issue: [#3368](https://github.com/rust-lang/rustfmt/issues/3368)
+#blank_lines_lower_bound = 0              ### Unstable: tracking issue: [#3382](https://github.com/rust-lang/rustfmt/issues/3382)
+#blank_lines_upper_bound = 1              ### Unstable: tracking issue: [#3381](https://github.com/rust-lang/rustfmt/issues/3381)
+#brace_style = "SameLineWhere"            ### Unstable: tracking issue: [#3376](https://github.com/rust-lang/rustfmt/issues/3376)
+#chain_width = 60                         ### use_small_heuristics = "Default"
+#color = "Auto"                           ### Unstable: tracking issue: [#3385](https://github.com/rust-lang/rustfmt/issues/3385)
+#combine_control_expr = true              ### Unstable: tracking issue: [#3369](https://github.com/rust-lang/rustfmt/issues/3369)
+#comment_width = 80                       ### Unstable: tracking issue: [#3349](https://github.com/rust-lang/rustfmt/issues/3349)
+#condense_wildcard_suffixes = false       ### Unstable: tracking issue: [#3384](https://github.com/rust-lang/rustfmt/issues/3384)
+#control_brace_style = "AlwaysSameLine"   ### Unstable: tracking issue: [#3377](https://github.com/rust-lang/rustfmt/issues/3377)
+disable_all_formatting = false
+edition = "2021" #2015
+#empty_item_single_line = true            ### Unstable: tracking issue: [#3356](https://github.com/rust-lang/rustfmt/issues/3356)
+#enum_discrim_align_threshold = 0         ### Unstable: tracking issue: [#3372](https://github.com/rust-lang/rustfmt/issues/3372)
+#error_on_line_overflow = false           ### Unstable: tracking issue: [#3391](https://github.com/rust-lang/rustfmt/issues/3391)
+#error_on_unformatted = false             ### Unstable: tracking issue: [#3392](https://github.com/rust-lang/rustfmt/issues/3392)
+#fn_args_layout = "Tall"                  ### Deprecated
+#fn_call_width = 60                       ### use_small_heuristics = "Default"
+fn_params_layout = "Tall"
+#fn_single_line = false                   ### Unstable: tracking issue: [#3358](https://github.com/rust-lang/rustfmt/issues/3358)
+force_explicit_abi = true
+#force_multiline_blocks = false           ### Unstable: tracking issue: [#3374](https://github.com/rust-lang/rustfmt/issues/3374)
+#format_code_in_doc_comments = false      ### Unstable: tracking issue: [#3348](https://github.com/rust-lang/rustfmt/issues/3348)
+#doc_comment_code_block_width = 100       ### Unstable: tracking issue: [#5359](https://github.com/rust-lang/rustfmt/issues/5359)
+#format_generated_files = true            ### Unstable: tracking issue: [#5080](https://github.com/rust-lang/rustfmt/issues/5080)
+#format_macro_matchers = false            ### Unstable: tracking issue: [#3354](https://github.com/rust-lang/rustfmt/issues/3354)
+#format_macro_bodies = true               ### Unstable: tracking issue: [#3355](https://github.com/rust-lang/rustfmt/issues/3355)
+#skip_macro_invocations = []              ### Unstable: tracking issue: [#5346](https://github.com/rust-lang/rustfmt/issues/5346)
+#format_strings = false                   ### Unstable: tracking issue: [#3353](https://github.com/rust-lang/rustfmt/issues/3353)
+hard_tabs = false
+#hex_literal_case = "Preserve"            ### Unstable: tracking issue: [#5081](https://github.com/rust-lang/rustfmt/issues/5081)
+#hide_parse_errors = false                ### Unstable: tracking issue: [#3390](https://github.com/rust-lang/rustfmt/issues/3390)
+#ignore = []                              ### Unstable: tracking issue: [#3395](https://github.com/rust-lang/rustfmt/issues/3395)
+#imports_indent = "Block"                 ### Unstable: tracking issue: [#3360](https://github.com/rust-lang/rustfmt/issues/3360)
+#imports_layout = "Mixed"                 ### Unstable: tracking issue: [#3361](https://github.com/rust-lang/rustfmt/issues/3361)
+#indent_style = "Block"                   ### Unstable: tracking issue: [#3346](https://github.com/rust-lang/rustfmt/issues/3346)
+#inline_attribute_width = 0               ### Unstable: tracking issue: [#3343](https://github.com/rust-lang/rustfmt/issues/3343)
+#match_arm_blocks = true                  ### Unstable: tracking issue: [#3373](https://github.com/rust-lang/rustfmt/issues/3373)
+match_arm_leading_pipes = "Never"
+match_block_trailing_comma = true # false
+max_width = 160 # 100
+merge_derives = true
+#imports_granularity = "Preserve"         ### Unstable: tracking issue: [#4991](https://github.com/rust-lang/rustfmt/issues/4991)
+#merge_imports = false                    ### Unstable: tracking issue: [#3362](https://github.com/rust-lang/rustfmt/issues/3362)
+newline_style = "Auto"
+#normalize_comments = false               ### Unstable: tracking issue: [#3350](https://github.com/rust-lang/rustfmt/issues/3350)
+#normalize_doc_attributes = false         ### Unstable: tracking issue: [#3351](https://github.com/rust-lang/rustfmt/issues/3351)
+#overflow_delimited_expr = false          ### Unstable: tracking issue: [#3370](https://github.com/rust-lang/rustfmt/issues/3370)
+remove_nested_parens = true
+#reorder_impl_items = false               ### Unstable: tracking issue: [#3363](https://github.com/rust-lang/rustfmt/issues/3363)
+reorder_imports = true
+#group_imports = "Preserve"               ### Unstable: tracking issue: [#5083](https://github.com/rust-lang/rustfmt/issues/5083)
+reorder_modules = true
+#required_version = "CARGO_PKG_VERSION"   ### Unstable: tracking issue: [#3386](https://github.com/rust-lang/rustfmt/issues/3386)
+short_array_element_width_threshold = 10
+#skip_children = false                    ### Unstable: tracking issue: [#3389](https://github.com/rust-lang/rustfmt/issues/3389)
+#single_line_if_else_max_width = 50       ### use_small_heuristics = "Default"
+#single_line_let_else_max_width = 50      ### use_small_heuristics = "Default"
+#space_after_colon = true                 ### Unstable: tracking issue: [#3366](https://github.com/rust-lang/rustfmt/issues/3366)
+#space_before_colon = false               ### Unstable: tracking issue: [#3365](https://github.com/rust-lang/rustfmt/issues/3365)
+#spaces_around_ranges = false             ### Unstable: tracking issue: [#3367](https://github.com/rust-lang/rustfmt/issues/3367)
+#struct_field_align_threshold = 0         ### Unstable: tracking issue: [#3371](https://github.com/rust-lang/rustfmt/issues/3371)
+#struct_lit_single_line = true            ### Unstable: tracking issue: [#3357](https://github.com/rust-lang/rustfmt/issues/3357)
+#struct_lit_width = 18                    ### use_small_heuristics = "Default"
+#struct_variant_width = 35                ### use_small_heuristics = "Default"
+tab_spaces = 4
+#trailing_comma = "Vertical"              ### Unstable: tracking issue: [#3379](https://github.com/rust-lang/rustfmt/issues/3379)
+#trailing_semicolon = true                ### Unstable: tracking issue: [#3378](https://github.com/rust-lang/rustfmt/issues/3378)
+#type_punctuation_density = "Wide"        ### Unstable: tracking issue: [#3364](https://github.com/rust-lang/rustfmt/issues/3364)
+#unstable_features = false                ### Unstable: tracking issue: [#3387](https://github.com/rust-lang/rustfmt/issues/3387)
+use_field_init_shorthand = false
+use_small_heuristics = "Default"
+use_try_shorthand = false
+#version = "One"                          ### Unstable: tracking issue: [#3383](https://github.com/rust-lang/rustfmt/issues/3383)
+#where_single_line = false                ### Unstable: tracking issue: [#3359](https://github.com/rust-lang/rustfmt/issues/3359)
+#wrap_comments = false                    ### Unstable: tracking issue: [#3347](https://github.com/rust-lang/rustfmt/issues/3347)
+#emit_mode                                ### Internal option
+#make_backup                              ### Internal option
+#print_misformatted_file_names            ### Internal option
