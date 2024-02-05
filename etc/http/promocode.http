@@ -1,0 +1,16 @@
+### Check promocode
+GET http://localhost:8080/promocode
+Content-Type: application/json
+
+### Put a new promocode into db
+PUT http://localhost:8080/promocode
+Content-Type: application/json
+
+### Delete a promocode by name
+DELETE http://localhost:8080/promocode
+Content-Type: application/json
+
+### Get all promocodes
+GET http://localhost:8080/promocodes
+Content-Type: application/json
+
