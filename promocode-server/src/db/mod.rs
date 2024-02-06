@@ -1,6 +1,6 @@
 // WARN: DB for dev only !
 
-use std::sync::{OnceLock, RwLock, RwLockReadGuard};
+use std::sync::{OnceLock, RwLock};
 
 use promocode_models::data::promocode::Promocode;
 
@@ -9,8 +9,8 @@ fn db() -> &'static RwLock<Vec<Promocode>> {
     DB.get_or_init(|| RwLock::new(vec![]))
 }
 
-pub fn db_list() -> RwLockReadGuard<'static, Vec<Promocode>> {
-    db().read().unwrap()
+pub fn db_list() -> Vec<Promocode> {
+    db().read().unwrap().to_vec()
 }
 
 pub fn db_get_by_id(id: String) -> Option<Promocode> {
