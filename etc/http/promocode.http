@@ -1,16 +1,40 @@
-### Check promocode
-GET http://localhost:8080/promocode
+### List all promocodes
+# status : DONE
+GET http://localhost:8080/promocodes
 Content-Type: application/json
 
+
 ### Put a new promocode into db
+# status DONE
 PUT http://localhost:8080/promocode
 Content-Type: application/json
 
+{"_id": "1","name": "name 1","avantage": {"percent": 20},"restrictions": [{"@date": {"after": "2019-01-01","before": "2020-06-30"}},{"@or": [{"@age": {"eq": 40}},{"@and": [{"@age": {"lt": 30,"gt": 15}},{"@meteo": {"is": "clear","temp": {"gt": "15"}}}]}]}]}
+
+### Put a bad promocode into db (no id in promocode)
+# status DONE
+PUT http://localhost:8080/promocode
+Content-Type: application/json
+
+{"_id": "","name": "name 1","avantage": {"percent": 20},"restrictions": [{"@date": {"after": "2019-01-01","before": "2020-06-30"}},{"@or": [{"@age": {"eq": 40}},{"@and": [{"@age": {"lt": 30,"gt": 15}},{"@meteo": {"is": "clear","temp": {"gt": "15"}}}]}]}]}
+
+### Put a bad object into db
+# status DONE
+PUT http://localhost:8080/promocode
+Content-Type: application/json
+
+{"bad_object": ""}
+
+
 ### Delete a promocode by name
+# status TODO
 DELETE http://localhost:8080/promocode
 Content-Type: application/json
 
-### Get all promocodes
-GET http://localhost:8080/promocodes
+"name 1"
+
+### Check promocode
+# status TODO
+GET http://localhost:8080/promocode
 Content-Type: application/json
 

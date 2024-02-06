@@ -28,6 +28,10 @@ pub fn db_get_by_name(name: String) -> Option<Promocode> {
 }
 
 pub fn db_push(promocode: Promocode) -> Result<(), /*Error*/ String> {
+    if db_list().iter().any(|it| it._id == promocode._id || it.name == promocode.name) {
+        return Err(format!("Promocode with id `{}` or name `{}` already exist.", promocode._id, promocode.name));
+    }
+
     match promocode.validate() {
         Ok(value) => Ok(db().write().unwrap().push(value)),
         Err(err) => Err(err),

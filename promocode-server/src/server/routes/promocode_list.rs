@@ -1,10 +1,12 @@
-use actix_web::{get, web, Error, HttpResponse};
+use actix_web::{get, web, HttpResponse};
+
+use crate::db::db_list;
 
 pub fn promocode_list_services(cfg: &mut web::ServiceConfig) {
     cfg.service(get_promocode_list);
 }
 
 #[get("/promocodes")]
-async fn get_promocode_list() -> actix_web::Result<HttpResponse, Error> {
-    Ok(HttpResponse::Ok().json(""))
+async fn get_promocode_list() -> HttpResponse {
+    HttpResponse::Ok().json(db_list())
 }
