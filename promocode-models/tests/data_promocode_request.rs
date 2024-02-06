@@ -8,7 +8,8 @@ fn promocode_request_validation() {
             age: 42,
             meteo: Meteo { town: "town".to_string() },
         },
-    }.validate();
+    }
+    .validate();
 
     assert!(promocode_request_valid.is_ok());
 
@@ -18,7 +19,8 @@ fn promocode_request_validation() {
             age: 42,
             meteo: Meteo { town: "town".to_string() },
         },
-    }.validate();
+    }
+    .validate();
 
     assert!(promocode_request_with_empty_promocode_name.is_err());
 
@@ -28,7 +30,8 @@ fn promocode_request_validation() {
             age: 42,
             meteo: Meteo { town: "".to_string() },
         },
-    }.validate();
+    }
+    .validate();
 
     assert!(promocode_request_with_empty_meteo_town.is_err());
 }
@@ -39,9 +42,10 @@ fn promocode_request_serde() {
         promocode_name: "WeatherCode".to_string(),
         arguments: Arguments {
             age: 25,
-            meteo: Meteo { town: "Lyon".to_string() }
+            meteo: Meteo { town: "Lyon".to_string() },
         },
-    }.validate();
+    }
+    .validate();
 
     assert!(promocode_request_valid.is_ok());
     let promocode_request = promocode_request_valid.unwrap();
@@ -60,5 +64,3 @@ fn promocode_request_serde() {
     assert_eq!(promocode_request, deserialized);
     assert_eq!(serialized, promocode_str);
 }
-
-

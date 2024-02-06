@@ -73,7 +73,7 @@ impl Promocode {
         let restrictions_result_collected: Vec<Result<Restriction, String>> = self.restrictions.iter().map(|it| it.validate()).collect();
 
         if let Some(err) = restrictions_result_collected.iter().find(|it| it.is_err()) {
-            return Err(err.clone().unwrap_err())
+            return Err(err.clone().unwrap_err());
         }
 
         Ok(self.clone())
@@ -124,7 +124,7 @@ impl Restriction {
                 // }
 
                 if let Err(err) = temp.validate() {
-                    return Err(err.to_string())
+                    return Err(err.to_string());
                 }
 
                 Ok(self.clone())
@@ -136,7 +136,7 @@ impl Restriction {
                 let predicate_result_collected: Vec<Result<Restriction, /* Error */ String>> = predicate.iter().map(|it| it.validate()).collect();
 
                 if let Some(err) = predicate_result_collected.iter().find(|it| it.is_err()) {
-                    return Err(err.clone().unwrap_err())
+                    return Err(err.clone().unwrap_err());
                 }
 
                 Ok(self.clone())
@@ -148,7 +148,7 @@ impl Restriction {
                 let predicate_result_collected: Vec<Result<Restriction, /* Error */ String>> = predicate.iter().map(|it| it.validate()).collect();
 
                 if let Some(err) = predicate_result_collected.iter().find(|it| it.is_err()) {
-                    return Err(err.clone().unwrap_err())
+                    return Err(err.clone().unwrap_err());
                 }
 
                 Ok(self.clone())
@@ -156,7 +156,6 @@ impl Restriction {
         }
     }
 }
-
 
 impl Temp {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable

@@ -16,7 +16,7 @@ fn promocode_accepted_validation() {
         status: "status".to_string(),
         avantage: Avantage { percent: 42 },
     }
-        .validate();
+    .validate();
 
     assert!(promocode_accepted_with_empty_promocode_name.is_err());
 
@@ -25,7 +25,7 @@ fn promocode_accepted_validation() {
         status: "status".to_string(),
         avantage: Avantage { percent: 0 },
     }
-        .validate();
+    .validate();
 
     assert!(promocode_accepted_with_bad_avantage.is_err());
 }
@@ -56,4 +56,3 @@ fn promocode_accepted_serde() {
     assert_eq!(promocode_accepted, deserialized);
     assert_eq!(serialized, promocode_str);
 }
-

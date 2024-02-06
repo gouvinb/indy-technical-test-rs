@@ -7,7 +7,7 @@ fn promocode_denied_validation() {
         status: "status".to_string(),
         reasons: Reasons {},
     }
-        .validate();
+    .validate();
 
     assert!(promocode_denied_valid.is_ok());
 
@@ -16,7 +16,7 @@ fn promocode_denied_validation() {
         status: "status".to_string(),
         reasons: Reasons {},
     }
-        .validate();
+    .validate();
 
     assert!(promocode_denied_with_empty_promocode_name.is_err());
 }
@@ -28,7 +28,7 @@ fn promocode_denied_serde() {
         status: "denied".to_string(),
         reasons: Reasons {},
     }
-        .validate();
+    .validate();
 
     assert!(promocode_denied_valid.is_ok());
     let promocode_denied = promocode_denied_valid.unwrap();
@@ -47,4 +47,3 @@ fn promocode_denied_serde() {
     assert_eq!(promocode_denied, deserialized);
     assert_eq!(serialized, promocode_str);
 }
-
