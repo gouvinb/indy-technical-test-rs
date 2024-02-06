@@ -14,17 +14,11 @@ pub fn db_list() -> Vec<Promocode> {
 }
 
 pub fn db_get_by_id(id: String) -> Option<Promocode> {
-    match db_list().iter().find(|promocode| promocode._id == id) {
-        None => None,
-        Some(value) => Some(value.clone()),
-    }
+    db_list().iter().find(|promocode| promocode._id == id).cloned()
 }
 
 pub fn db_get_by_name(name: String) -> Option<Promocode> {
-    match db_list().iter().find(|promocode| promocode.name == name) {
-        None => None,
-        Some(value) => Some(value.clone()),
-    }
+    db_list().iter().find(|promocode| promocode.name == name).cloned()
 }
 
 pub fn db_push(promocode: Promocode) -> Result<(), /*Error*/ String> {
@@ -33,7 +27,10 @@ pub fn db_push(promocode: Promocode) -> Result<(), /*Error*/ String> {
     }
 
     match promocode.validate() {
-        Ok(value) => Ok(db().write().unwrap().push(value)),
+        Ok(value) => {
+            db().write().unwrap().push(value);
+            Ok(())
+        },
         Err(err) => Err(err),
     }
 }
