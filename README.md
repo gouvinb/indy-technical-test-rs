@@ -7,12 +7,13 @@
 - Order is irrelevant
 - I had a few interruptions while doing the exercise (personal reason)
 
-| Steps                        | Temps   |
-|------------------------------|---------|
-| Project initialization       | ~10min  |
-| Brainstorming                | ~60min  |
-| Data model & validation part | ~45min  |
-| ...                          | ~XXmin  |
+| Steps                        | Temps  |
+|------------------------------|--------|
+| Project initialization       | ~10min |
+| Brainstorming                | ~60min |
+| Data model & validation part | ~45min |
+| Handmade database            | ~10min |
+| ...                          | ~XXmin |
 
 ## Project layout
 
