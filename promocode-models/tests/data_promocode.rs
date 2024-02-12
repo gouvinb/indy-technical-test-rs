@@ -1,5 +1,7 @@
-use promocode_models::data::promocode::Restriction::{Age, And, Date, Meteo, Or};
-use promocode_models::data::promocode::{Avantage, Promocode, Temp};
+use promocode_models::data::avantage::Avantage;
+use promocode_models::data::promocode::Promocode;
+use promocode_models::data::restriction::Restriction::{Age, And, Date, Meteo, Or};
+use promocode_models::data::temp::Temp;
 
 #[test]
 fn promocode_validation() {

@@ -1,4 +1,5 @@
-use promocode_models::data::promocode::{Avantage, Promocode};
+use promocode_models::data::avantage::Avantage;
+use promocode_models::data::promocode::Promocode;
 use promocode_server::db::{db_delete_by_id, db_delete_by_name, db_get_by_id, db_get_by_name, db_list, db_push};
 
 #[test]
