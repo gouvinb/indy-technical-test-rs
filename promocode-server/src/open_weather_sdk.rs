@@ -26,7 +26,11 @@ pub fn open_weather_instance() -> Result<MutexGuard<'static, OpenWeather>, Strin
 }
 
 pub async fn get_current_meteo_and_temp(promocode_req_json: &Json<PromocodeRequest>) -> Option<(String, f64)> {
-    let open_weather_instance = open_weather_instance().unwrap().clone();
+    let open_weather_instance = match open_weather_instance() {
+        Ok(guard) => guard,
+        Err(_) => return None,
+    }
+    .clone();
 
     let geocoding_result = open_weather_instance
         .geocoding
