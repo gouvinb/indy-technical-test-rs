@@ -1,12 +1,15 @@
 [package]
 name = "promocode-client"
 version = "0.1.0"
+authors.workspace = true
 edition.workspace = true
 license-file.workspace = true
-authors.workspace = true
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
+
+env_logger = "0.11"
+log = "0.4"
 
 promocode-models = { path = "../promocode-models" }
 promocode-util = { path = "../promocode-util" }
