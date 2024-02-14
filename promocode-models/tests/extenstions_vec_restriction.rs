@@ -42,6 +42,42 @@ fn check_request_date() {
         }],
     };
 
+    let promocode_with_impossible_case_date = Promocode {
+        _id: "id - today".to_string(),
+        name: "today".to_string(),
+        avantage: Avantage { percent: 10 },
+        restrictions: vec![
+            Restriction::Date {
+                after: now_date_naive.with_day(now_date_naive.day() - 1).unwrap().format(date_fmt_str).to_string(),
+                before: now_date_naive.with_day(now_date_naive.day() - 1).unwrap().format(date_fmt_str).to_string(),
+            },
+            Restriction::Date {
+                after: now_date_naive.with_day(now_date_naive.day()).unwrap().format(date_fmt_str).to_string(),
+                before: now_date_naive.with_day(now_date_naive.day()).unwrap().format(date_fmt_str).to_string(),
+            },
+            Restriction::Date {
+                after: now_date_naive.with_day(now_date_naive.day() + 1).unwrap().format(date_fmt_str).to_string(),
+                before: now_date_naive.with_day(now_date_naive.day() + 1).unwrap().format(date_fmt_str).to_string(),
+            },
+        ],
+    };
+
+    let promocode_with_useless_case_date = Promocode {
+        _id: "id - today".to_string(),
+        name: "today".to_string(),
+        avantage: Avantage { percent: 10 },
+        restrictions: vec![
+            Restriction::Date {
+                after: now_date_naive.with_day(now_date_naive.day() - 1).unwrap().format(date_fmt_str).to_string(),
+                before: now_date_naive.with_day(now_date_naive.day() + 1).unwrap().format(date_fmt_str).to_string(),
+            },
+            Restriction::Date {
+                after: now_date_naive.with_day(now_date_naive.day()).unwrap().format(date_fmt_str).to_string(),
+                before: now_date_naive.with_day(now_date_naive.day()).unwrap().format(date_fmt_str).to_string(),
+            },
+        ],
+    };
+
     let promocode_with_today_date = Promocode {
         _id: "id - today".to_string(),
         name: "today".to_string(),
@@ -60,10 +96,18 @@ fn check_request_date() {
         },
     };
 
-    assert_eq!(promocode_with_past_date.restrictions.check_request(request.arguments.clone(), None,), false);
-    assert_eq!(promocode_with_future_date.restrictions.check_request(request.arguments.clone(), None,), false);
-    assert_eq!(promocode_with_in_range_date.restrictions.check_request(request.arguments.clone(), None,), true);
-    assert_eq!(promocode_with_today_date.restrictions.check_request(request.arguments.clone(), None,), true);
+    assert_eq!(promocode_with_past_date.restrictions.check_request(request.arguments.clone(), None), false);
+    assert_eq!(promocode_with_future_date.restrictions.check_request(request.arguments.clone(), None), false);
+    assert_eq!(promocode_with_in_range_date.restrictions.check_request(request.arguments.clone(), None), true);
+    assert_eq!(
+        promocode_with_impossible_case_date.restrictions.check_request(request.arguments.clone(), None),
+        false
+    );
+    assert_eq!(
+        promocode_with_useless_case_date.restrictions.check_request(request.arguments.clone(), None),
+        true
+    );
+    assert_eq!(promocode_with_today_date.restrictions.check_request(request.arguments.clone(), None), true);
 }
 
 #[test]

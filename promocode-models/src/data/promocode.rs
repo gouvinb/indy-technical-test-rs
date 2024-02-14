@@ -32,10 +32,6 @@ impl Promocode {
 
         self.avantage.validate()?;
 
-        if self.restrictions.len() > 2 {
-            return Err("`restrictions` must contain 0, 1 or 2 entries.".to_string());
-        }
-
         if !self.restrictions.is_empty() {
             if let Restriction::And(_) | Restriction::Or(_) = self.restrictions.first().unwrap() {
                 return Err("The first restriction must a @date, @age or @meteo.".to_string());
@@ -92,12 +88,6 @@ impl TryFrom<PromocodeShadow> for Promocode {
         if let RestrictionShadow::And(_) | RestrictionShadow::Or(_) = value.restrictions.first().unwrap() {
             return Err("The first restriction must a @date, @age or @meteo.".to_string());
         }
-
-        if let (2, RestrictionShadow::And(_) | RestrictionShadow::Or(_)) = (value.restrictions.len(), value.restrictions.first().unwrap()) {
-            return Err("The next restriction must a @and or @or.".to_string());
-        }
-
-        // WARN: restrictions must have @date, @age or @meteo AND POTENTIALLY @and ot @or
 
         let restrictions_result_collected: Vec<Result<Restriction, Self::Error>> = value.restrictions.iter().map(restriction_shadow_as_restriction()).collect();
 
