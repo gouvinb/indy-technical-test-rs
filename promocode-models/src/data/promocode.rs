@@ -42,7 +42,7 @@ impl Promocode {
             }
         }
 
-        let restrictions_result_collected: Vec<Result<Restriction, String>> = self.restrictions.iter().map(|it| it.validate()).collect();
+        let restrictions_result_collected: Vec<Result<Restriction, /* Error */ String>> = self.restrictions.iter().map(|it| it.validate()).collect();
 
         if let Some(err) = restrictions_result_collected.iter().find(|it| it.is_err()) {
             return Err(err.clone().unwrap_err());
