@@ -157,9 +157,9 @@ fn check_request_age() {
     };
 
     let request_base = |promocode_name: String, age: u8| PromocodeRequest {
-        promocode_name: promocode_name,
+        promocode_name,
         arguments: Arguments {
-            age: age,
+            age,
             meteo: Meteo { town: "Lyon".to_string() },
         },
     };
