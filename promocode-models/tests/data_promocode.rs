@@ -229,29 +229,31 @@ fn promocode_validation() {
 
     assert!(promocode_with_invalid_age_restriction.is_err());
 
-    // WARN: must be uncommented if Meteo have `is` validation
-    // let promocode_with_invalid_meteo_is_restriction = Promocode {
-    //     _id: "id".to_string(),
-    //     name: "name".to_string(),
-    //     avantage: Avantage { percent: 42 },
-    //     restrictions: vec![
-    //         Meteo { is: "".to_string(), temp: Temp { gt: "0".to_string() } },
-    //     ],
-    // }.validate();
-    //
-    // assert!(promocode_with_invalid_meteo_is_restriction.is_err());
+    let promocode_with_invalid_meteo_is_restriction = Promocode {
+        _id: "id".to_string(),
+        name: "name".to_string(),
+        avantage: Avantage { percent: 42 },
+        restrictions: vec![Meteo {
+            is: "".to_string(),
+            temp: Temp { gt: "0".to_string() },
+        }],
+    }
+    .validate();
 
-    // WARN: must be uncommented if Temp have `gt` emtpy check
-    // let promocode_with_empty_meteo_temp_gt_restriction = Promocode {
-    //     _id: "id".to_string(),
-    //     name: "name".to_string(),
-    //     avantage: Avantage { percent: 42 },
-    //     restrictions: vec![
-    //         Meteo { is: "is".to_string(), temp: Temp { gt: "".to_string() } },
-    //     ],
-    // }.validate();
-    //
-    // assert!(promocode_with_empty_meteo_temp_gt_restriction.is_err());
+    assert!(promocode_with_invalid_meteo_is_restriction.is_err());
+
+    let promocode_with_empty_meteo_temp_gt_restriction = Promocode {
+        _id: "id".to_string(),
+        name: "name".to_string(),
+        avantage: Avantage { percent: 42 },
+        restrictions: vec![Meteo {
+            is: "is".to_string(),
+            temp: Temp { gt: "".to_string() },
+        }],
+    }
+    .validate();
+
+    assert!(promocode_with_empty_meteo_temp_gt_restriction.is_err());
 
     let promocode_with_invalid_meteo_temp_gt_restriction = Promocode {
         _id: "id".to_string(),
