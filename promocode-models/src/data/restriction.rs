@@ -113,6 +113,16 @@ impl Restriction {
             },
         }
     }
+
+    fn collect_predicate(
+        predicate_result_collected: Vec<Result<Restriction, String>>,
+    ) -> Result<Restrictions, Result<Restriction, <Restriction as TryFrom<RestrictionShadow>>::Error>> {
+        let predicate_collected = match predicate_result_collected.iter().find(|it| it.is_err()) {
+            None => predicate_result_collected.iter().map(|it| it.clone().unwrap()).collect(),
+            Some(err) => return Err(Err(err.clone().unwrap_err())),
+        };
+        Ok(predicate_collected)
+    }
 }
 
 impl TryFrom<RestrictionShadow> for Restriction {
@@ -178,27 +188,19 @@ impl TryFrom<RestrictionShadow> for Restriction {
                 if predicate.is_empty() {
                     return Err("`@and` restrictions must be nonempty.".to_string());
                 }
-                let predicate_result_collected: Vec<Result<Restriction, Self::Error>> = predicate.iter().map(restriction_shadow_as_restriction()).collect();
-
-                let predicate_collected = match predicate_result_collected.iter().find(|it| it.is_err()) {
-                    None => predicate_result_collected.iter().map(|it| it.clone().unwrap()).collect(),
-                    Some(err) => return Err(err.clone().unwrap_err()),
-                };
-
-                Ok(Restriction::And(predicate_collected))
+                match Self::collect_predicate(predicate.iter().map(restriction_shadow_as_restriction()).collect()) {
+                    Ok(value) => Ok(Restriction::And(value)),
+                    Err(value) => value,
+                }
             },
             RestrictionShadow::Or(predicate) => {
                 if predicate.is_empty() {
                     return Err("`@or` restrictions must be nonempty.".to_string());
                 }
-                let predicate_result_collected: Vec<Result<Restriction, Self::Error>> = predicate.iter().map(restriction_shadow_as_restriction()).collect();
-
-                let predicate_collected = match predicate_result_collected.iter().find(|it| it.is_err()) {
-                    None => predicate_result_collected.iter().map(|it| it.clone().unwrap()).collect(),
-                    Some(err) => return Err(err.clone().unwrap_err()),
-                };
-
-                Ok(Restriction::Or(predicate_collected))
+                match Self::collect_predicate(predicate.iter().map(restriction_shadow_as_restriction()).collect()) {
+                    Ok(value) => Ok(Restriction::Or(value)),
+                    Err(value) => value,
+                }
             },
         }
     }
