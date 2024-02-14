@@ -75,7 +75,6 @@ impl Restriction {
                     (_, _, _) => Err("Unsupported @age restriction.".to_string()),
                 }
             },
-            #[allow(unused_variables)]
             Restriction::Meteo { is, temp } => {
                 if is.is_empty() {
                     return Err("`is` must be nonempty.".to_string());
