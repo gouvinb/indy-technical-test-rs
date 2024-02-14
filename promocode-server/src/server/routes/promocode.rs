@@ -1,4 +1,4 @@
-use actix_web::{delete, get, HttpResponse, put, web};
+use actix_web::{delete, get, put, web, HttpResponse};
 
 use promocode_models::data::promocode::Promocode;
 use promocode_models::extensions::vec_restriction::RestrictionsExt;
@@ -26,7 +26,7 @@ pub async fn get_promocode(promocode_req_json: web::Json<PromocodeRequest>) -> H
             let weather_and_temp = open_weather_sdk::get_current_meteo_and_temp(&promocode_req_json).await;
 
             promocode.restrictions.check_request(promocode_req_json.arguments.clone(), weather_and_temp)
-        }
+        },
         None => false,
     };
 

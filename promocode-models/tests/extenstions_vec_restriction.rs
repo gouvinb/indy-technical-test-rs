@@ -60,26 +60,10 @@ fn check_request_date() {
         },
     };
 
-    assert_eq!(
-        promocode_with_past_date.restrictions.check_request(request.arguments.clone(), "".to_string(),),
-        false
-    );
-    assert_eq!(
-        promocode_with_future_date
-            .restrictions
-            .check_request(request.arguments.clone(), "".to_string(),),
-        false
-    );
-    assert_eq!(
-        promocode_with_in_range_date
-            .restrictions
-            .check_request(request.arguments.clone(), "".to_string(),),
-        true
-    );
-    assert_eq!(
-        promocode_with_today_date.restrictions.check_request(request.arguments.clone(), "".to_string(),),
-        true
-    );
+    assert_eq!(promocode_with_past_date.restrictions.check_request(request.arguments.clone(), None,), false);
+    assert_eq!(promocode_with_future_date.restrictions.check_request(request.arguments.clone(), None,), false);
+    assert_eq!(promocode_with_in_range_date.restrictions.check_request(request.arguments.clone(), None,), true);
+    assert_eq!(promocode_with_today_date.restrictions.check_request(request.arguments.clone(), None,), true);
 }
 
 #[test]
@@ -139,88 +123,88 @@ fn check_request_age() {
     assert_eq!(
         promocode_with_eq_30_age
             .restrictions
-            .check_request(request_base("age testing - eq 30".to_string(), 31).arguments, "".to_string()),
+            .check_request(request_base("age testing - eq 30".to_string(), 31).arguments, None),
         false
     );
     assert_eq!(
         promocode_with_eq_30_age
             .restrictions
-            .check_request(request_base("age testing - eq 30".to_string(), 30).arguments, "".to_string()),
+            .check_request(request_base("age testing - eq 30".to_string(), 30).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_eq_30_age
             .restrictions
-            .check_request(request_base("age testing - eq 30".to_string(), 29).arguments, "".to_string()),
+            .check_request(request_base("age testing - eq 30".to_string(), 29).arguments, None),
         false
     );
 
     assert_eq!(
         promocode_with_lt_30_age
             .restrictions
-            .check_request(request_base("age testing - lt 30".to_string(), 31).arguments, "".to_string()),
+            .check_request(request_base("age testing - lt 30".to_string(), 31).arguments, None),
         false
     );
     assert_eq!(
         promocode_with_lt_30_age
             .restrictions
-            .check_request(request_base("age testing - lt 30".to_string(), 30).arguments, "".to_string()),
+            .check_request(request_base("age testing - lt 30".to_string(), 30).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_lt_30_age
             .restrictions
-            .check_request(request_base("age testing - lt 30".to_string(), 29).arguments, "".to_string()),
+            .check_request(request_base("age testing - lt 30".to_string(), 29).arguments, None),
         true
     );
 
     assert_eq!(
         promocode_with_gt_30_age
             .restrictions
-            .check_request(request_base("age testing - gt 30".to_string(), 31).arguments, "".to_string()),
+            .check_request(request_base("age testing - gt 30".to_string(), 31).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_gt_30_age
             .restrictions
-            .check_request(request_base("age testing - gt 30".to_string(), 30).arguments, "".to_string()),
+            .check_request(request_base("age testing - gt 30".to_string(), 30).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_gt_30_age
             .restrictions
-            .check_request(request_base("age testing - gt 30".to_string(), 29).arguments, "".to_string()),
+            .check_request(request_base("age testing - gt 30".to_string(), 29).arguments, None),
         false
     );
 
     assert_eq!(
         promocode_with_range_20_40_age
             .restrictions
-            .check_request(request_base("age testing - range 20..40".to_string(), 19).arguments, "".to_string()),
+            .check_request(request_base("age testing - range 20..40".to_string(), 19).arguments, None),
         false
     );
     assert_eq!(
         promocode_with_range_20_40_age
             .restrictions
-            .check_request(request_base("age testing - range 20..40".to_string(), 20).arguments, "".to_string()),
+            .check_request(request_base("age testing - range 20..40".to_string(), 20).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_range_20_40_age
             .restrictions
-            .check_request(request_base("age testing - range 20..40".to_string(), 30).arguments, "".to_string()),
+            .check_request(request_base("age testing - range 20..40".to_string(), 30).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_range_20_40_age
             .restrictions
-            .check_request(request_base("age testing - range 20..40".to_string(), 40).arguments, "".to_string()),
+            .check_request(request_base("age testing - range 20..40".to_string(), 40).arguments, None),
         true
     );
     assert_eq!(
         promocode_with_range_20_40_age
             .restrictions
-            .check_request(request_base("age testing - range 20..40".to_string(), 41).arguments, "".to_string()),
+            .check_request(request_base("age testing - range 20..40".to_string(), 41).arguments, None),
         false
     );
 }
@@ -231,12 +215,10 @@ fn check_request_meteo() {
         _id: "id - meteo testing - clear 15".to_string(),
         name: "meteo testing - clear 15".to_string(),
         avantage: Avantage { percent: 10 },
-        restrictions: vec![
-            Restriction::Meteo {
-                is: "clear".to_string(),
-                temp: Temp { gt: "15".to_string() },
-            },
-        ],
+        restrictions: vec![Restriction::Meteo {
+            is: "clear".to_string(),
+            temp: Temp { gt: "15".to_string() },
+        }],
     };
 
     let request = PromocodeRequest {
@@ -248,17 +230,62 @@ fn check_request_meteo() {
     };
 
     assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), None), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 1f64))), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 15f64))), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 42f64))), false);
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("not clear".to_string(), 1f64))),
+        false
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("not clear".to_string(), 15f64))),
+        false
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("not clear".to_string(), 42f64))),
+        false
+    );
 
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 1f64))), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 15f64))), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 42f64))), false);
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("Clear".to_string(), 1f64))),
+        false
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("Clear".to_string(), 15f64))),
+        false
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("Clear".to_string(), 42f64))),
+        false
+    );
 
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 1f64))), false);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 15f64))), true);
-    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 42f64))), true);
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("clear".to_string(), 1f64))),
+        false
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("clear".to_string(), 15f64))),
+        true
+    );
+    assert_eq!(
+        promocode_with_clear_15_meteo
+            .restrictions
+            .check_request(request.arguments.clone(), Some(("clear".to_string(), 42f64))),
+        true
+    );
 }
 
 #[test]
@@ -320,8 +347,28 @@ fn check_request_and_or() {
         },
     };
 
-    assert_eq!(promocode_with_eq_19_age_or_20_40_age.restrictions.check_request(request_with_18_age.arguments, "".to_string()), false);
-    assert_eq!(promocode_with_eq_19_age_or_20_40_age.restrictions.check_request(request_with_41_age.arguments, "".to_string()), false);
-    assert_eq!(promocode_with_eq_19_age_or_20_40_age.restrictions.check_request(request_with_19_age.arguments, "".to_string()), true);
-    assert_eq!(promocode_with_eq_19_age_or_20_40_age.restrictions.check_request(request_with_30_age.arguments, "".to_string()), true);
+    assert_eq!(
+        promocode_with_eq_19_age_or_20_40_age
+            .restrictions
+            .check_request(request_with_18_age.arguments, None),
+        false
+    );
+    assert_eq!(
+        promocode_with_eq_19_age_or_20_40_age
+            .restrictions
+            .check_request(request_with_41_age.arguments, None),
+        false
+    );
+    assert_eq!(
+        promocode_with_eq_19_age_or_20_40_age
+            .restrictions
+            .check_request(request_with_19_age.arguments, None),
+        true
+    );
+    assert_eq!(
+        promocode_with_eq_19_age_or_20_40_age
+            .restrictions
+            .check_request(request_with_30_age.arguments, None),
+        true
+    );
 }
