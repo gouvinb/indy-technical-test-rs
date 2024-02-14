@@ -3,6 +3,7 @@ use chrono::{Datelike, Utc};
 use promocode_models::data::avantage::Avantage;
 use promocode_models::data::promocode::Promocode;
 use promocode_models::data::restriction::Restriction;
+use promocode_models::data::temp::Temp;
 use promocode_models::extensions::vec_restriction::RestrictionsExt;
 use promocode_models::req::promocode_request::{Arguments, Meteo, PromocodeRequest};
 
@@ -226,7 +227,38 @@ fn check_request_age() {
 
 #[test]
 fn check_request_meteo() {
-    // TODO(gouvinb): Not mockable case
+    let promocode_with_clear_15_meteo = Promocode {
+        _id: "id - meteo testing - clear 15".to_string(),
+        name: "meteo testing - clear 15".to_string(),
+        avantage: Avantage { percent: 10 },
+        restrictions: vec![
+            Restriction::Meteo {
+                is: "clear".to_string(),
+                temp: Temp { gt: "15".to_string() },
+            },
+        ],
+    };
+
+    let request = PromocodeRequest {
+        promocode_name: "meteo testing - clear 15".to_string(),
+        arguments: Arguments {
+            age: 1,
+            meteo: Meteo { town: "Lyon".to_string() },
+        },
+    };
+
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), None), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 1f64))), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 15f64))), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("not clear".to_string(), 42f64))), false);
+
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 1f64))), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 15f64))), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("Clear".to_string(), 42f64))), false);
+
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 1f64))), false);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 15f64))), true);
+    assert_eq!(promocode_with_clear_15_meteo.restrictions.check_request(request.arguments.clone(), Some(("clear".to_string(), 42f64))), true);
 }
 
 #[test]

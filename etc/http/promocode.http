@@ -553,9 +553,48 @@ Content-Type: application/json
 
 ################################################################################
 # Meteo
+#
+# WARN: Not mockable case
 ################################################################################
 
-### Not mockable case
+
+### Put a good promocode into db (meteo testing - 15 clear)
+# status DONE
+PUT http://localhost:8080/promocode
+Content-Type: application/json
+
+{
+  "_id": "meteo testing - 15 clear",
+  "name": "15 clear",
+  "avantage": {
+    "percent": 20
+  },
+  "restrictions": [
+    {
+      "@meteo": {
+        "is": "clear",
+        "temp": {
+          "gt": "15"
+        }
+      }
+    }
+  ]
+}
+
+### Check promocode @meteo = "meteo testing - 15 clear"
+# status DONE
+GET http://localhost:8080/promocode
+Content-Type: application/json
+
+{
+  "promocode_name": "15 clear",
+  "arguments": {
+    "age": 25,
+    "meteo": {
+      "town": "Lyon"
+    }
+  }
+}
 
 ################################################################################
 # And / Or

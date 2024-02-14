@@ -1,10 +1,11 @@
-use actix_web::{delete, get, put, web, HttpResponse};
+use actix_web::{delete, get, HttpResponse, put, web};
 
 use promocode_models::data::promocode::Promocode;
 use promocode_models::extensions::vec_restriction::RestrictionsExt;
 use promocode_models::req::promocode_request::PromocodeRequest;
 
 use crate::db::{db_delete_by_name, db_get_by_name, db_list, db_push};
+use crate::open_weather_sdk;
 
 pub fn promocode_services(cfg: &mut web::ServiceConfig) {
     cfg.service(get_promocode);
@@ -17,11 +18,15 @@ pub fn promocode_services(cfg: &mut web::ServiceConfig) {
 #[get("/promocode")]
 pub async fn get_promocode(promocode_req_json: web::Json<PromocodeRequest>) -> HttpResponse {
     let mut percent = 0u8;
+
     let predicate = match db_get_by_name(promocode_req_json.promocode_name.clone()) {
         Some(promocode) => {
             percent = promocode.avantage.percent;
-            promocode.restrictions.check_request(promocode_req_json.arguments.clone(), "".to_string())
-        },
+
+            let weather_and_temp = open_weather_sdk::get_current_meteo_and_temp(&promocode_req_json).await;
+
+            promocode.restrictions.check_request(promocode_req_json.arguments.clone(), weather_and_temp)
+        }
         None => false,
     };
 

@@ -1,16 +1,17 @@
+use chrono::{NaiveDate, Utc};
+use log::{debug, error, info};
+
 use crate::data::restriction::Restriction;
 use crate::req::promocode_request::Arguments;
-use chrono::{NaiveDate, Utc};
-use log::info;
 
 pub type Restrictions = Vec<Restriction>;
 
 pub trait RestrictionsExt {
-    fn check_request(&self, arguments: Arguments, open_weather_map_api_key: String) -> bool;
+    fn check_request(&self, arguments: Arguments, weather_and_temp: Option<(String, f64)>) -> bool;
 }
 
 impl RestrictionsExt for Restrictions {
-    fn check_request(&self, arguments: Arguments, open_weather_map_api_key: String) -> bool {
+    fn check_request(&self, arguments: Arguments, weather_and_temp: Option<(String, f64)>) -> bool {
         let first_restriction_check = match self.first().unwrap() {
             Restriction::Date { after, before } => {
                 let now = Utc::now().date_naive();
@@ -28,13 +29,15 @@ impl RestrictionsExt for Restrictions {
                 (Some(gt_u8), None, Some(lt_u8)) => gt_u8 <= &arguments.age && &arguments.age <= lt_u8,
                 _ => false,
             },
-            Restriction::Meteo { .. } => {
-                if open_weather_map_api_key.is_empty() {
+            Restriction::Meteo { is, temp } => match weather_and_temp {
+                None => {
+                    error!("Skip meteo check and return false because open_weather_sdk_unchecked is None.");
                     false
-                } else {
-                    // TODO: Use Open Weather API
-                    true
-                }
+                },
+                Some((ref remote_weather, remote_temp)) => {
+                    debug!("{is} == {remote_weather} && {} < {remote_temp}", temp.gt.as_str().parse::<f64>().unwrap());
+                    is == remote_weather && temp.gt.as_str().parse::<f64>().unwrap() <= remote_temp
+                },
             },
             _ => {
                 return false;
@@ -42,8 +45,8 @@ impl RestrictionsExt for Restrictions {
         };
 
         match self.get(1) {
-            Some(Restriction::Or(or_restriction)) => first_restriction_check || or_restriction.check_request(arguments, open_weather_map_api_key),
-            Some(Restriction::And(and_restriction)) => first_restriction_check && and_restriction.check_request(arguments, open_weather_map_api_key),
+            Some(Restriction::Or(or_restriction)) => first_restriction_check || or_restriction.check_request(arguments, weather_and_temp.clone()),
+            Some(Restriction::And(and_restriction)) => first_restriction_check && and_restriction.check_request(arguments, weather_and_temp.clone()),
             None => first_restriction_check,
             _ => false,
         }

@@ -77,10 +77,9 @@ impl Restriction {
             },
             #[allow(unused_variables)]
             Restriction::Meteo { is, temp } => {
-                // WARN: must be uncommented if Meteo have `is` validation
-                // if is.is_empty() {
-                //     Err("`is` must be nonempty.")
-                // }
+                if is.is_empty() {
+                    return Err("`is` must be nonempty.".to_string());
+                }
 
                 if let Err(err) = temp.validate() {
                     return Err(err.to_string());
@@ -161,10 +160,9 @@ impl TryFrom<RestrictionShadow> for Restriction {
                 }
             },
             RestrictionShadow::Meteo { is, temp } => {
-                // WARN: must be uncommented if Meteo have `is` validation
-                // if is.is_empty() {
-                //     Err("`is` must be nonempty.")
-                // }
+                if is.is_empty() {
+                    return Err("`is` must be nonempty.".to_string());
+                }
 
                 let temp_converted = match Temp::try_from(temp) {
                     Ok(result) => result,
