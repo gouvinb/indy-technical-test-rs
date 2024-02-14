@@ -31,7 +31,7 @@ impl PromocodeDenied {
 impl Reasons {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
-    // TODO: Ask to product: what we do here
+    // TODO: Ask to product: what we do here ?
     pub fn validate(&self) -> Result<Reasons, /* Error */ String> {
         Ok(self.clone())
     }
@@ -61,7 +61,7 @@ impl TryFrom<PromocodeDeniedShadow> for PromocodeDenied {
 impl TryFrom<ReasonsShadow> for Reasons {
     type Error = String;
 
-    // TODO: Ask to product: what we do here
+    // TODO: Ask to product: what we do here ?
     #[allow(unused_variables)]
     fn try_from(value: ReasonsShadow) -> Result<Self, Self::Error> {
         Ok(Reasons {})
