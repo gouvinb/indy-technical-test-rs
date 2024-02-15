@@ -24,7 +24,10 @@
 | 1st review                             | ~30min |                                         |
 | Limit break restrictions               | ~5min  |                                         |
 | 2nd review                             | ~30min |                                         |
-| ...                                    | ~XXmin |                                         |
+| Github action                          | ~10min | _`act` dl 75Gb on my pc_                |
+| `actix_web` to `ntex`                  | ~20min | _With testing_                          |
+
+**Total**: 8h and 45 min
 
 ## Project layout
 

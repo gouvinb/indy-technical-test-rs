@@ -11,11 +11,11 @@ reporters.
 
 |                 | Licence(s)      |
 |-----------------|-----------------|
-| actix-web       | Apache-2.0, MIT |
 | chrono          | Apache-2.0, MIT |
 | clap            | Apache-2.0, MIT |
 | env_logger      | Apache-2.0, MIT |
 | log             | Apache-2.0, MIT |
+| ntex            | Apache-2.0, MIT |
 | openweather_sdk | MIT             |
 | serde           | Apache-2.0, MIT |
 | serde_json      | Apache-2.0, MIT |
