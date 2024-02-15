@@ -8,6 +8,12 @@ use std::error::Error;
 
 static OPEN_WEATHER: OnceLock<Mutex<OpenWeather>> = OnceLock::new();
 
+/// Initializes the Open Weather SDK with the specified API key.
+///
+/// # Returns
+///
+/// Returns a [Result] with an [Error] message in case the Open Weather SDK is
+/// already initialized, or [Ok] indicating successful initialization.
 pub fn init_open_weather_sdk(api_key: String) -> Result<(), String /* Error */> {
     match OPEN_WEATHER.set(Mutex::new(OpenWeather::new(api_key, Units::Metric, Language::default()))) {
         Ok(_) => Ok(()),
@@ -15,6 +21,12 @@ pub fn init_open_weather_sdk(api_key: String) -> Result<(), String /* Error */> 
     }
 }
 
+/// Opens a weather instance.
+///
+/// # Returns
+///
+/// Returns a [Result] with the weather instance if successful, or an error
+/// message if the Open Weather SDK is not initialized or if there was an error.
 pub fn open_weather_instance() -> Result<MutexGuard<'static, OpenWeather>, String /* Error */> {
     match OPEN_WEATHER.get() {
         None => Err("Open Wether SDK must be initialized.".to_string()),
@@ -25,6 +37,18 @@ pub fn open_weather_instance() -> Result<MutexGuard<'static, OpenWeather>, Strin
     }
 }
 
+/// Retrieves the current weather and temperature for a given town specified in
+/// the `promocode_req_json` argument.
+///
+/// # Arguments
+///
+/// - `promocode_req_json` - A reference to the JSON object containing the
+///   [PromocodeRequest]
+///
+/// # Returns
+///
+/// An [Option] containing a tuple of the weather description (in lowercase) and
+/// temperature if successful or returns [None] otherwise.
 pub async fn get_current_meteo_and_temp(promocode_req_json: &Json<PromocodeRequest>) -> Option<(String, f64)> {
     let open_weather_instance = match open_weather_instance() {
         Ok(guard) => guard,

@@ -10,6 +10,12 @@ pub struct Avantage {
 impl Avantage {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [percent] field of an [Avantage] struct.
+    ///
+    /// # Returns
+    ///
+    /// Returns a [Result] with [Avantage] if the validation is successful,
+    /// otherwise returns an [Err] with an error message.
     pub fn validate(&self) -> Result<Avantage, /* Error */ String> {
         // WARN: Ask to product: percent may be 0 ?
         if !(1u8..=100u8).contains(&self.percent) {

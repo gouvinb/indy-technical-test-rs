@@ -21,6 +21,13 @@ pub struct Promocode {
 impl Promocode {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates a [Promocode] struct without [_shadow].
+    ///
+    /// # Returns
+    ///
+    /// Returns a [Result] where the success value is a validated [Promocode]
+    /// object, and the error value is a descriptive error message if validation
+    /// fails.
     pub fn validate(&self) -> Result<Promocode, /* Error */ String> {
         if self._id.is_empty() {
             return Err("`_id` must be nonempty.".to_string());
@@ -51,6 +58,36 @@ impl Promocode {
         Ok(self.clone())
     }
 
+    /// Generates a data response for a given [Promocode].
+    ///
+    /// # Arguments
+    ///
+    /// - `promocode_name` - The name of the [Promocode].
+    /// - `percent` - The percentage value for the [Promocode].
+    /// - `predicate` - A boolean value indicating whether the [Promocode] is
+    ///    valid or not.
+    ///
+    /// # Returns
+    ///
+    /// Returns a result with either a [PromocodeAccepted] struct if the
+    /// [Promocode] is accepted, or a [PromocodeDenied] struct if the
+    /// [Promocode] is denied.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use promocode_models::data::promocode::Promocode;
+    ///
+    /// let result = Promocode::generate_response("CODE123".to_string(), 10, true);
+    /// match result {
+    ///     Ok(accepted) => {
+    ///         println!("Promocode accepted: {:?}", accepted);
+    ///     }
+    ///     Err(denied) => {
+    ///         println!("Promocode denied: {:?}", denied);
+    ///     }
+    /// }
+    /// ```
     pub fn generate_response(promocode_name: String, percent: u8, predicate: bool) -> Result<PromocodeAccepted, PromocodeDenied> {
         if predicate {
             Ok(PromocodeAccepted {
@@ -105,6 +142,21 @@ impl TryFrom<PromocodeShadow> for Promocode {
     }
 }
 
-pub(crate) fn restriction_shadow_as_restriction() -> fn(&RestrictionShadow) -> Result<Restriction, /* Error */ String> {
+/// Converts [RestrictionShadow] to [Restriction] using the [try_from] method of
+/// [Restriction].
+///
+/// # Arguments
+///
+/// - `it` - The [RestrictionShadow] to be converted.
+///
+/// # Returns
+///
+/// A [Result] containing the converted [Restriction] on success, or an [Error]
+/// string on failure.
+///
+/// # Remarks
+///
+/// Must be use in [Iterator::map]
+pub fn restriction_shadow_as_restriction() -> fn(&RestrictionShadow) -> Result<Restriction, /* Error */ String> {
     |it| Restriction::try_from(it.clone())
 }

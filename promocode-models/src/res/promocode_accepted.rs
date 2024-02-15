@@ -19,6 +19,16 @@ pub struct Avantage {
 impl PromocodeAccepted {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [PromocodeAccepted] struct.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if [promocode_name] is empty or if there is an error
+    /// validating [avantage].
+    ///
+    /// # Returns
+    ///
+    /// Returns [Ok] with a [PromocodeAccepted] if the struct is valid.
     pub fn validate(&self) -> Result<PromocodeAccepted, /* Error */ String> {
         if self.promocode_name.is_empty() {
             return Err("`promocode_name` must be nonempty.".to_string());
@@ -33,6 +43,13 @@ impl PromocodeAccepted {
 impl Avantage {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [Avantage].
+    ///
+    /// # Returns
+    ///
+    /// The result of the validation. [Ok] with cloned [Avantage] if the
+    /// validation is successful, or [Err] with an error message if the
+    /// [percent] value is not within the range of 1 to 100 (inclusive).
     pub fn validate(&self) -> Result<Avantage, /* Error */ String> {
         // WARN: Ask to product: percent may be 0 ?
         if !(1u8..=100u8).contains(&self.percent) {

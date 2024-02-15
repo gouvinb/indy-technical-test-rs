@@ -10,7 +10,19 @@ pub struct Temp {
 impl Temp {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
-    pub(crate) fn validate(&self) -> Result<Self, /* Error */ String> {
+    /// Validate the current object.
+    ///
+    /// # Errors
+    ///
+    /// Returns a `String` error if any of the following conditions are met:
+    /// - The `gt` field is empty.
+    /// - The `gt` field cannot be parsed as a `f64`.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok` with a cloned reference to `Self` if the validation is
+    /// successful.
+    pub fn validate(&self) -> Result<Self, /* Error */ String> {
         if self.gt.is_empty() {
             return Err("`gt` must be nonempty.".to_string());
         }

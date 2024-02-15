@@ -3,6 +3,7 @@ use actix_web::web;
 pub mod promocode;
 pub mod promocode_list;
 
+/// Registers the services for the application.
 pub fn services(cfg: &mut web::ServiceConfig) {
     promocode::promocode_services(cfg);
 

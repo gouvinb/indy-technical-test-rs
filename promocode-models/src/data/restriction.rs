@@ -37,7 +37,14 @@ pub enum Restriction {
 impl Restriction {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
-    pub(crate) fn validate(&self) -> Result<Self, /* Error */ String> {
+    /// Validate the Restriction.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [Err] if the Restriction is not valid, with a String
+    /// describing the error. Otherwise, returns [Ok] with a cloned copy of the
+    /// [Restriction].
+    pub fn validate(&self) -> Result<Self, /* Error */ String> {
         match &self {
             Restriction::Date { before, after } => {
                 match (
@@ -113,6 +120,33 @@ impl Restriction {
         }
     }
 
+    /// Collect a [Vec]<[Result]<[Restriction], [String]>> and return a [Result]
+    /// of [Restrictions].
+    ///
+    /// # Arguments
+    ///
+    /// - `predicate_result_collected` - A vector of
+    ///   [Result]<[Restriction], [String]>, representing the results of the
+    ///   predicate.
+    ///
+    /// # Returns
+    ///
+    /// - Returns a [Result] containing either the collected [Restrictions] or
+    ///   an error if any of the predicate results are [Err].
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use std::convert::TryFrom;
+    /// use promocode_models::data::restriction::Restriction;
+    ///
+    /// let predicates : Vec<Result<Restriction, String>> = vec![];
+    ///
+    /// match Restriction::collect_predicate(predicates) {
+    ///     Ok(value) => Ok(Restriction::And(value)),
+    ///     Err(value) => value,
+    /// }
+    /// ```
     fn collect_predicate(
         predicate_result_collected: Vec<Result<Restriction, String>>,
     ) -> Result<Restrictions, Result<Restriction, <Restriction as TryFrom<RestrictionShadow>>::Error>> {

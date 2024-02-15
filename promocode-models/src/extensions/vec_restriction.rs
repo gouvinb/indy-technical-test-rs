@@ -4,13 +4,43 @@ use log::error;
 use crate::data::restriction::Restriction;
 use crate::req::promocode_request::Arguments;
 
+/// A collection of `Restriction` objects
 pub type Restrictions = Vec<Restriction>;
 
+/// Trait for extending the functionality of `Restrictions`.
 pub trait RestrictionsExt {
     fn check_request(&self, arguments: Arguments, weather_and_temp: Option<(String, f64)>) -> bool;
 }
 
 impl RestrictionsExt for Restrictions {
+    /// Checks if the request satisfies all the given [Restrictions]. Returns a
+    /// boolean indicating whether the request is valid or not.
+    ///
+    /// # Arguments
+    ///
+    /// - `arguments` - The arguments of the request.
+    /// - `weather_and_temp` - The optional weather condition and temperature.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use chrono::Utc;
+    /// use chrono::NaiveDate;
+    /// use promocode_models::data::restriction::Restriction;
+    /// use promocode_models::extensions::vec_restriction::RestrictionsExt;
+    /// use promocode_models::req::promocode_request::{Arguments, Meteo};
+    ///
+    /// let now = Utc::now().naive_utc();
+    /// let after_date = NaiveDate::from_ymd_opt(2021, 10, 1).unwrap();
+    /// let before_date = NaiveDate::from_ymd_opt(2021, 12, 31).unwrap();
+    /// let arguments = Arguments { age: 25, meteo: Meteo { town: "town".to_string()}};
+    /// let weather_and_temp = Some(("clear".to_string(), 25.0));
+    ///
+    /// let restrictions: Vec<Restriction> = vec![];
+    /// let result = restrictions.check_request(arguments, weather_and_temp);
+    ///
+    /// assert_eq!(result, true);
+    /// ```
     fn check_request(&self, arguments: Arguments, weather_and_temp: Option<(String, f64)>) -> bool {
         self.iter().fold(true, |acc_predicate, restriction| match restriction {
             Restriction::Date { after, before } => {

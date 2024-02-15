@@ -17,6 +17,12 @@ pub struct Reasons {}
 impl PromocodeDenied {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [PromocodeDenied] instance.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [Result] containing either a [PromocodeDenied] instance if
+    /// validation fails or an error [String].
     pub fn validate(&self) -> Result<PromocodeDenied, /* Error */ String> {
         if self.promocode_name.is_empty() {
             return Err("`promocode_name` must be nonempty.".to_string());
@@ -31,8 +37,9 @@ impl PromocodeDenied {
 impl Reasons {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
-    // TODO: Ask to product: what we do here ?
+    /// NOOP: But expect a [Reasons] validation
     pub fn validate(&self) -> Result<Reasons, /* Error */ String> {
+        // TODO: Ask to product: what we do here ?
         Ok(self.clone())
     }
 }

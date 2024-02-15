@@ -25,6 +25,19 @@ pub struct Meteo {
 impl PromocodeRequest {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [PromocodeRequest] object.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [Err] variant if:
+    ///
+    /// - [promocode_name] is empty.
+    /// - Validation of the [arguments] fails.
+    ///
+    /// # Returns
+    ///
+    /// If the validation is successful, returns a new [PromocodeRequest]
+    /// object.
     pub fn validate(&self) -> Result<PromocodeRequest, /* Error */ String> {
         if self.promocode_name.is_empty() {
             return Err("`promocode_name` must be nonempty.".to_string());
@@ -39,6 +52,20 @@ impl PromocodeRequest {
 impl Arguments {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the arguments.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [Result] which can be either:
+    ///
+    /// - [Ok] with a cloned [Arguments] if the arguments are valid.
+    /// - [Err] with a [String] if there is an error.
+    ///
+    /// # Remarks
+    ///
+    /// This method internally calls the [validate] method of the [meteo] field.
+    /// If [meteo.validate()] returns an error, this method will also return an
+    /// error.
     pub fn validate(&self) -> Result<Arguments, /* Error */ String> {
         self.meteo.validate()?;
 
@@ -49,6 +76,16 @@ impl Arguments {
 impl Meteo {
     // type Error = String; // <- Case error[E0658]: inherent associated types are unstable
 
+    /// Validates the [Meteo] struct.
+    ///
+    /// # Errors
+    ///
+    /// Returns [Err] if the [town] field is empty.
+    ///
+    /// # Returns
+    ///
+    /// - [Result]<[Meteo], [String] - Returns the validated [Meteo] struct if
+    ///   successful, or an error message if validation fails.
     pub fn validate(&self) -> Result<Meteo, /* Error */ String> {
         if self.town.is_empty() {
             return Err("`town` must be nonempty.".to_string());
