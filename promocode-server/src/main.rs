@@ -22,7 +22,7 @@ fn main() {
         };
     }
 
-    match server::serve(cli.host, cli.port, cli.debug) {
+    match server::serve(cli.host, cli.port) {
         Ok(_) => {},
         Err(err) => {
             error!("{}", err)

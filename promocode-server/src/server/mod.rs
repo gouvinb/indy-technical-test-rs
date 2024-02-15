@@ -14,7 +14,7 @@ mod routes;
 /// A [Result] indicating the success or failure of the server startup.
 #[allow(unused_variables)]
 #[actix_web::main]
-pub async fn serve(host: String, port: u16, debug: bool) -> std::io::Result<()> {
+pub async fn serve(host: String, port: u16) -> std::io::Result<()> {
     let server = HttpServer::new(move || App::new().configure(routes::services));
 
     server.bind((host, port))?.run().await
