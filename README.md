@@ -51,4 +51,25 @@
 
 ## References
 
-Nothing for now.
+- [chrono](https://github.com/chronotope/chrono)
+- [clap](https://github.com/clap-rs/clap)
+- [env_logger](https://github.com/rust-cli/env_logger)
+- [log](https://github.com/rust-lang/log)
+- [ntex](https://github.com/ntex-rs/ntex)
+- [openweather_sdk](https://github.com/jt-rose/openweather_sdk)
+- [serde](https://github.com/serde-rs/serde)
+- [serde_json](https://github.com/serde-rs/json)
+
+- [serde-rs/serde#939-939514114](https://github.com/serde-rs/serde/issues/939#issuecomment-939514114)
+
+## What's next?
+
+- Fix last warnings/todos
+- Make a client module
+- Add logger
+- Make builder pattern for some struct (with validation ect...)
+- Use a embedded db
+- Generate OpenAPI specs
+- Generate API docs for Github Pages (Although the code is on a public platform,
+  it remains private, so no docs.rs)
+
