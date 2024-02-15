@@ -1,4 +1,4 @@
-use actix_web::{get, web, HttpResponse};
+use ntex::web::{get, HttpResponse, ServiceConfig};
 
 use crate::db::db_list;
 
@@ -9,12 +9,12 @@ use crate::db::db_list;
 /// - `cfg` - A mutable reference to the `ServiceConfig` to register the service
 ///   with.
 ///
-pub fn promocode_list_services(cfg: &mut web::ServiceConfig) {
+pub fn promocode_list_services(cfg: &mut ServiceConfig) {
     cfg.service(get_promocode_list);
 }
 
 /// Fetches the list of [Promocode].
 #[get("/promocodes")]
 async fn get_promocode_list() -> HttpResponse {
-    HttpResponse::Ok().json(db_list())
+    HttpResponse::Ok().json(&db_list())
 }

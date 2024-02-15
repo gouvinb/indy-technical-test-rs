@@ -1,4 +1,4 @@
-use actix_web::web;
+use ntex::web;
 
 pub mod promocode;
 pub mod promocode_list;

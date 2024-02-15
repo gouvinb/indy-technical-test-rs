@@ -1,7 +1,7 @@
 use std::sync::{Mutex, MutexGuard, OnceLock};
 
-use actix_web::web::Json;
 use log::error;
+use ntex::web::types::Json;
 use openweather_sdk::{Language, OpenWeather, Units};
 use promocode_models::req::promocode_request::PromocodeRequest;
 use std::error::Error;

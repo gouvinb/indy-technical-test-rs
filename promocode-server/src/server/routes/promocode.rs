@@ -1,4 +1,5 @@
-use actix_web::{delete, get, put, web, HttpResponse};
+use ntex::web::types::Json;
+use ntex::web::{delete, get, put, HttpResponse, ServiceConfig};
 
 use promocode_models::data::promocode::Promocode;
 use promocode_models::extensions::vec_restriction::RestrictionsExt;
@@ -17,7 +18,7 @@ use crate::open_weather_sdk;
 /// # Arguments
 ///
 /// * `cfg` - A mutable reference to the [ServiceConfig] where the routes will be added.
-pub fn promocode_services(cfg: &mut web::ServiceConfig) {
+pub fn promocode_services(cfg: &mut ServiceConfig) {
     cfg.service(get_promocode);
     cfg.service(put_promocode);
     if cfg!(debug_assertions) {
@@ -55,7 +56,7 @@ pub fn promocode_services(cfg: &mut web::ServiceConfig) {
 /// - Checking the restrictions of the [Promocode].
 /// - Generating a response with the provided [Promocode].
 #[get("/promocode")]
-pub async fn get_promocode(promocode_req_json: web::Json<PromocodeRequest>) -> HttpResponse {
+pub async fn get_promocode(promocode_req_json: Json<PromocodeRequest>) -> HttpResponse {
     let mut percent = 0u8;
 
     let predicate = match db_get_by_name(promocode_req_json.promocode_name.clone()) {
@@ -70,8 +71,8 @@ pub async fn get_promocode(promocode_req_json: web::Json<PromocodeRequest>) -> H
     };
 
     match Promocode::generate_response(promocode_req_json.promocode_name.clone(), percent, predicate) {
-        Ok(promocode_accepted) => HttpResponse::Ok().json(promocode_accepted),
-        Err(err) => HttpResponse::BadRequest().json(err),
+        Ok(promocode_accepted) => HttpResponse::Ok().json(&promocode_accepted),
+        Err(err) => HttpResponse::BadRequest().json(&err),
     }
 }
 
@@ -93,17 +94,17 @@ pub async fn get_promocode(promocode_req_json: web::Json<PromocodeRequest>) -> H
 /// - If an error occurred while adding the [Promocode] to the database, it
 ///   returns a [HttpResponse::BadRequest()] response with the error message.
 #[put("/promocode")]
-pub async fn put_promocode(promocode_json: web::Json<Promocode>) -> HttpResponse {
+pub async fn put_promocode(promocode_json: Json<Promocode>) -> HttpResponse {
     if db_list().iter().any(|it| it._id == promocode_json._id || it.name == promocode_json.name) {
-        return HttpResponse::BadRequest().json(format!(
+        return HttpResponse::BadRequest().json(&format!(
             "Promocode with id `{}` or name `{}` already exist.",
             promocode_json._id, promocode_json.name
         ));
     }
 
     match db_push(promocode_json.to_owned()) {
-        Ok(_) => HttpResponse::Ok().json(""),
-        Err(err) => HttpResponse::BadRequest().json(err),
+        Ok(_) => HttpResponse::Ok().json(&""),
+        Err(err) => HttpResponse::BadRequest().json(&err),
     }
 }
 
@@ -118,7 +119,7 @@ pub async fn put_promocode(promocode_json: web::Json<Promocode>) -> HttpResponse
 /// An [HttpResponse] with a status code of 200 if the [Promocode] was
 /// successfully deleted from the database. The response body is an empty JSON object.
 #[delete("/promocode")]
-pub async fn delete_promocode(name: web::Json<String>) -> HttpResponse {
+pub async fn delete_promocode(name: Json<String>) -> HttpResponse {
     db_delete_by_name(name.to_owned());
-    HttpResponse::Ok().json("")
+    HttpResponse::Ok().json(&"")
 }

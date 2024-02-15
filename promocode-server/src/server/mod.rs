@@ -1,4 +1,4 @@
-use actix_web::{App, HttpServer};
+use ntex::web::{App, HttpServer};
 
 mod routes;
 
@@ -13,7 +13,7 @@ mod routes;
 ///
 /// A [Result] indicating the success or failure of the server startup.
 #[allow(unused_variables)]
-#[actix_web::main]
+#[ntex::main]
 pub async fn serve(host: String, port: u16) -> std::io::Result<()> {
     let server = HttpServer::new(move || App::new().configure(routes::services));
 
