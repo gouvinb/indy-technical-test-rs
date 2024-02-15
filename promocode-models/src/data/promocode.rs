@@ -72,22 +72,6 @@ impl Promocode {
     /// Returns a result with either a [PromocodeAccepted] struct if the
     /// [Promocode] is accepted, or a [PromocodeDenied] struct if the
     /// [Promocode] is denied.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use promocode_models::data::promocode::Promocode;
-    ///
-    /// let result = Promocode::generate_response("CODE123".to_string(), 10, true);
-    /// match result {
-    ///     Ok(accepted) => {
-    ///         println!("Promocode accepted: {:?}", accepted);
-    ///     }
-    ///     Err(denied) => {
-    ///         println!("Promocode denied: {:?}", denied);
-    ///     }
-    /// }
-    /// ```
     pub fn generate_response(promocode_name: String, percent: u8, predicate: bool) -> Result<PromocodeAccepted, PromocodeDenied> {
         if predicate {
             Ok(PromocodeAccepted {

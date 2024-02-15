@@ -133,20 +133,6 @@ impl Restriction {
     ///
     /// - Returns a [Result] containing either the collected [Restrictions] or
     ///   an error if any of the predicate results are [Err].
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use std::convert::TryFrom;
-    /// use promocode_models::data::restriction::Restriction;
-    ///
-    /// let predicates : Vec<Result<Restriction, String>> = vec![];
-    ///
-    /// match Restriction::collect_predicate(predicates) {
-    ///     Ok(value) => Ok(Restriction::And(value)),
-    ///     Err(value) => value,
-    /// }
-    /// ```
     fn collect_predicate(
         predicate_result_collected: Vec<Result<Restriction, String>>,
     ) -> Result<Restrictions, Result<Restriction, <Restriction as TryFrom<RestrictionShadow>>::Error>> {

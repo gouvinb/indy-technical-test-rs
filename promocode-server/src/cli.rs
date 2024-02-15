@@ -13,10 +13,6 @@ pub struct Cli {
     #[arg(long, value_name = "PORT", default_value_t = 8080)]
     pub port: u16,
 
-    // /// Turn debugging information on
-    // #[arg(short, long, default_value_t = false)]
-    // pub debug: bool,
-
     /// Open Weather Map API key.
     ///
     /// Quota:
