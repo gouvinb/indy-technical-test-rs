@@ -1,11 +1,21 @@
 # Indy-technical-test-rs
 
+## Until commit b703fa88 (`docs - Dev: remove Indy mention` Bruno* 23/02/2024 10:53)
+
 Private License
 
 Copyright (c) 2024, gouvinb
 
-Only JojoIndy and indy-tech-test are authorized to take part in the project as
-reporters.
+Only JojoIndy and indy-tech-test are allowed to take part in the project as
+reporter.
+
+## After commit b703fa88 (`docs - Dev: remove Indy mention` Bruno* 23/02/2024 10:53)
+
+Private License
+
+Copyright (c) 2024, gouvinb
+
+Anyone can participate as a reporter.
 
 # References
 
@@ -19,5 +29,3 @@ reporters.
 | openweather_sdk | MIT             |
 | serde           | Apache-2.0, MIT |
 | serde_json      | Apache-2.0, MIT |
-
-

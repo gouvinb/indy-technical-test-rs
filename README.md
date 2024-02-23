@@ -1,4 +1,4 @@
-# Indy technical test in Rust
+# Technical test in Rust
 
 ## Roadmap
 
