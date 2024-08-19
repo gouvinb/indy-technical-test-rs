@@ -51,8 +51,7 @@ impl Avantage {
     /// validation is successful, or [Err] with an error message if the
     /// [percent] value is not within the range of 1 to 100 (inclusive).
     pub fn validate(&self) -> Result<Avantage, /* Error */ String> {
-        // WARN: Ask to product: percent may be 0 ?
-        if !(1u8..=100u8).contains(&self.percent) {
+        if !(0u8..=100u8).contains(&self.percent) {
             return Err("`percent` must be greater than 0 and lower than 101.".to_string());
         }
 
@@ -85,8 +84,7 @@ impl TryFrom<AvantageShadow> for Avantage {
     type Error = String;
 
     fn try_from(value: AvantageShadow) -> Result<Self, Self::Error> {
-        // WARN: Ask to product: percent may be 0 ?
-        if !(1u8..=100u8).contains(&value.percent) {
+        if !(0u8..=100u8).contains(&value.percent) {
             return Err("`percent` must be greater than 0 and lower than 101.".to_string());
         }
 

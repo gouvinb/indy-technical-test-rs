@@ -5,7 +5,7 @@ use promocode_models::data::temp::Temp;
 
 #[test]
 fn promocode_validation() {
-    let promocode_valid = Promocode {
+    let promocode_complex_valid = Promocode {
         _id: "...".to_string(),
         name: "WeatherCode".to_string(),
         avantage: Avantage { percent: 20 },
@@ -36,7 +36,7 @@ fn promocode_validation() {
     }
     .validate();
 
-    assert!(promocode_valid.is_ok());
+    assert!(promocode_complex_valid.is_ok());
 
     let promocode_with_empty_id = Promocode {
         _id: "".to_string(),
@@ -135,7 +135,7 @@ fn promocode_validation() {
     }
     .validate();
 
-    assert!(promocode_with_0_percent_to_avantage.is_err());
+    assert!(promocode_with_0_percent_to_avantage.is_ok());
 
     let promocode_with_101_percent_to_avantage = Promocode {
         _id: "id".to_string(),
@@ -287,6 +287,37 @@ fn promocode_validation() {
     .validate();
 
     assert!(promocode_with_empty_or_restriction.is_err());
+
+    let promocode_implicit_or_restriction = Promocode {
+        _id: "...".to_string(),
+        name: "WeatherCode".to_string(),
+        avantage: Avantage { percent: 20 },
+        restrictions: vec![
+            Date {
+                after: "2019-01-01".to_string(),
+                before: "2020-06-30".to_string(),
+            },
+            Age {
+                lt: None,
+                eq: Some(40),
+                gt: None,
+            },
+            And(vec![
+                Age {
+                    lt: Some(30),
+                    eq: None,
+                    gt: Some(15),
+                },
+                Meteo {
+                    is: "clear".to_string(),
+                    temp: Temp { gt: "15".to_string() },
+                },
+            ]),
+        ],
+    }
+    .validate();
+
+    assert!(promocode_implicit_or_restriction.is_ok());
 }
 
 #[test]

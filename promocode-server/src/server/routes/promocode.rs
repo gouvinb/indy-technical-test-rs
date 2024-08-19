@@ -65,7 +65,9 @@ pub async fn get_promocode(promocode_req_json: Json<PromocodeRequest>) -> HttpRe
 
             let weather_and_temp = open_weather_sdk::get_current_meteo_and_temp(&promocode_req_json).await;
 
-            promocode.restrictions.check_request(promocode_req_json.arguments.clone(), weather_and_temp)
+            promocode
+                .restrictions
+                .check_restriction_or(promocode_req_json.arguments.clone(), weather_and_temp)
         },
         None => false,
     };
