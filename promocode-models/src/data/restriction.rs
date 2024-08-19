@@ -1,4 +1,5 @@
-use chrono::NaiveDate;
+use chrono::{NaiveDate, Utc};
+use log::error;
 use serde::{Deserialize, Serialize};
 
 use promocode::restriction_shadow_as_restriction;
@@ -6,7 +7,8 @@ use promocode::restriction_shadow_as_restriction;
 use crate::data::_shadow::RestrictionShadow;
 use crate::data::promocode;
 use crate::data::temp::Temp;
-use crate::extensions::vec_restriction::Restrictions;
+use crate::extensions::vec_restriction::{Restrictions, RestrictionsExt};
+use crate::req::promocode_request::Arguments;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 #[serde(try_from = "RestrictionShadow")]
@@ -141,6 +143,79 @@ impl Restriction {
             Some(err) => return Err(Err(err.clone().unwrap_err())),
         };
         Ok(predicate_collected)
+    }
+
+    /// Checks if the request satisfies one of the given [Restrictions]. Returns
+    /// a boolean indicating whether the request is valid or not.
+    ///
+    /// (Implicit [crate::data::restriction::Restriction])
+    ///
+    /// # Arguments
+    ///
+    /// - `arguments` - Requested arguments.
+    /// - `weather_and_temp` - The optional weather condition and temperature.
+    pub fn check_restriction_generic(&self, arguments: Arguments, weather_and_temp: Option<(String, f64)>) -> bool {
+        match self {
+            Restriction::Date { after, before } => Self::check_restriction_date(after, before),
+            Restriction::Age { lt, eq, gt } => Self::check_restriction_age(&arguments, lt, eq, gt),
+            Restriction::Meteo { is, temp } => Self::check_restriction_meteo(&weather_and_temp, is, temp),
+            Restriction::Or(or_restriction) => or_restriction.check_restriction_or(arguments.clone(), weather_and_temp.clone()),
+            Restriction::And(and_restriction) => and_restriction.check_restriction_and(arguments.clone(), weather_and_temp.clone()),
+        }
+    }
+
+    /// Checks if the request satisfies [Restriction::Date]. Returns a boolean
+    /// indicating whether the request is valid or not.
+    ///
+    /// # Arguments
+    ///
+    /// - `after` - Requested max date (default: [NaiveDate::MAX]).
+    /// - `before` - Requested min date (default: [NaiveDate::MIN]).
+    fn check_restriction_date(after: &String, before: &String) -> bool {
+        let now = Utc::now().date_naive();
+        let after_date = NaiveDate::parse_from_str(after.as_str(), "%Y-%m-%d").unwrap_or(NaiveDate::MIN);
+        let before_date = NaiveDate::parse_from_str(before.as_str(), "%Y-%m-%d").unwrap_or(NaiveDate::MAX);
+
+        after_date <= now && now <= before_date
+    }
+
+    /// Checks if the request satisfies [Restriction::Age]. Returns a boolean
+    /// indicating whether the request is valid or not.
+    ///
+    /// One of `lt`, `eq` or `gt` must be different to [None]
+    ///
+    /// # Arguments
+    ///
+    /// - `arguments` - Requested arguments.
+    /// - `lt` - Requested "lower than".
+    /// - `eq` - Requested "equal".
+    /// - `gt` - Requested "greater than".
+    fn check_restriction_age(arguments: &Arguments, lt: &Option<u8>, eq: &Option<u8>, gt: &Option<u8>) -> bool {
+        match (gt, eq, lt) {
+            (None, Some(eq_u8), None) => &arguments.age == eq_u8,
+            (Some(gt_u8), None, None) => &arguments.age >= gt_u8,
+            (None, None, Some(lt_u8)) => &arguments.age <= lt_u8,
+            (Some(gt_u8), None, Some(lt_u8)) => gt_u8 <= &arguments.age && &arguments.age <= lt_u8,
+            _ => false,
+        }
+    }
+
+    /// Checks if the request satisfies [Restriction::Meteo]. Returns a boolean
+    /// indicating whether the request is valid or not.
+    ///
+    /// # Arguments
+    ///
+    /// - `weather_and_temp` - Current weather and temperature from remote.
+    /// - `is` - Requested weather.
+    /// - `temp` - Requested temperature.
+    fn check_restriction_meteo(weather_and_temp: &Option<(String, f64)>, is: &String, temp: &Temp) -> bool {
+        match weather_and_temp {
+            None => {
+                error!("Skip meteo check and return false because open_weather_sdk_unchecked is None.");
+                false
+            },
+            Some((ref remote_weather, remote_temp)) => is == remote_weather && temp.gt.as_str().parse::<f64>().unwrap() <= *remote_temp,
+        }
     }
 }
 

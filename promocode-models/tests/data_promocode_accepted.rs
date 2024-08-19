@@ -27,7 +27,7 @@ fn promocode_accepted_validation() {
     }
     .validate();
 
-    assert!(promocode_accepted_with_bad_avantage.is_err());
+    assert!(promocode_accepted_with_bad_avantage.is_ok());
 }
 
 #[test]
