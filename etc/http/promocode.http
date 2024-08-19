@@ -89,7 +89,7 @@ Content-Type: application/json
 "name 2"
 
 
-### Check promocode bad date and bad age
+### Check promocode empty db
 # status DONE
 GET http://localhost:8080/promocode
 Content-Type: application/json
