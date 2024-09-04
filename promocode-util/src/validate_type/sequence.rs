@@ -7,8 +7,8 @@ use std::{
 };
 
 /// A nonempty [Vec]
-#[repr(transparent)]
 #[derive(Serialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(transparent)]
 #[serde(transparent)]
 pub struct NonEmptyVec<T>(Vec<T>);
 
@@ -58,13 +58,18 @@ impl<'de, T: Deserialize<'de>> Deserialize<'de> for NonEmptyVec<T> {
 
 impl<T: Display> Display for NonEmptyVec<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.0.iter().map(|it| format!("{}", it).to_string()).collect::<Vec<String>>().join(", ").fmt(f)
+        self.0
+            .iter()
+            .map(|it| format!("{}", it).to_string())
+            .collect::<Vec<String>>()
+            .join(", ")
+            .fmt(f)
     }
 }
 
 /// A nonempty [HashSet]
-#[repr(transparent)]
 #[derive(Serialize, Debug, Clone, PartialEq, Eq)]
+#[repr(transparent)]
 #[serde(transparent)]
 pub struct NonEmptyHashSet<T: Eq + hash::Hash>(HashSet<T>);
 
@@ -114,6 +119,11 @@ impl<'de, T: Deserialize<'de> + Eq + hash::Hash> Deserialize<'de> for NonEmptyHa
 
 impl<T: Display + Eq + hash::Hash> Display for NonEmptyHashSet<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.0.iter().map(|it| format!("{}", it).to_string()).collect::<Vec<String>>().join(", ").fmt(f)
+        self.0
+            .iter()
+            .map(|it| format!("{}", it).to_string())
+            .collect::<Vec<String>>()
+            .join(", ")
+            .fmt(f)
     }
 }

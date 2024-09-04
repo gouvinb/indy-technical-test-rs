@@ -3,8 +3,8 @@ use serde::{de::Error, Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
 /// A nonempty [String]
-#[repr(transparent)]
 #[derive(Serialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(transparent)]
 #[serde(transparent)]
 pub struct NonEmptyString(String);
 
@@ -58,8 +58,8 @@ impl Display for NonEmptyString {
 }
 
 /// A nonblank [String]
-#[repr(transparent)]
 #[derive(Serialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(transparent)]
 #[serde(transparent)]
 pub struct NonBlankString(String);
 
