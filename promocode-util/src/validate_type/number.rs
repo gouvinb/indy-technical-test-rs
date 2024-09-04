@@ -5,8 +5,8 @@ use std::fmt::{Display, Formatter};
 macro_rules! generate_bounded_num {
     ($module:ident, $name:ident, $type_name:ident) => {
         /// A [`$name`]($name) that's bounded between two values (inclusive)
-        #[repr(transparent)]
         #[derive(Serialize, Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[repr(transparent)]
         #[serde(transparent)]
         pub struct $name<const MIN: $type_name, const MAX: $type_name>($type_name);
 
