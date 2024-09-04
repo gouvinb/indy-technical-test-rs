@@ -1,12 +1,14 @@
-use ntex::web::types::Json;
-use ntex::web::{delete, get, put, HttpResponse, ServiceConfig};
+use ntex::web::{delete, get, put, types::Json, HttpResponse, ServiceConfig};
 
-use promocode_models::data::promocode::Promocode;
-use promocode_models::extensions::vec_restriction::RestrictionsExt;
-use promocode_models::req::promocode_request::PromocodeRequest;
-
-use crate::db::{db_delete_by_name, db_get_by_name, db_list, db_push};
-use crate::open_weather_sdk;
+use crate::{
+    db::{db_delete_by_name, db_get_by_name, db_list, db_push},
+    open_weather_sdk,
+};
+use promocode_models::{
+    promocode::{restrictions::RestrictionsExt, Promocode},
+    promocode_request::PromocodeRequest,
+    promocode_response::PromocodeResponse,
+};
 
 /// Configure the promo code services.
 ///
@@ -59,9 +61,9 @@ pub fn promocode_services(cfg: &mut ServiceConfig) {
 pub async fn get_promocode(promocode_req_json: Json<PromocodeRequest>) -> HttpResponse {
     let mut percent = 0u8;
 
-    let predicate = match db_get_by_name(promocode_req_json.promocode_name.clone()) {
+    let predicate = match db_get_by_name(promocode_req_json.promocode_name()) {
         Some(promocode) => {
-            percent = promocode.avantage.percent;
+            percent = promocode.avantage.percent.get();
 
             let weather_and_temp = open_weather_sdk::get_current_meteo_and_temp(&promocode_req_json).await;
 
@@ -72,9 +74,12 @@ pub async fn get_promocode(promocode_req_json: Json<PromocodeRequest>) -> HttpRe
         None => false,
     };
 
-    match Promocode::generate_response(promocode_req_json.promocode_name.clone(), percent, predicate) {
-        Ok(promocode_accepted) => HttpResponse::Ok().json(&promocode_accepted),
-        Err(err) => HttpResponse::BadRequest().json(&err),
+    match Promocode::generate_response(promocode_req_json.promocode_name(), percent, predicate) {
+        Ok(promocode_response) => match promocode_response {
+            PromocodeResponse::Accepted { .. } => HttpResponse::Ok().json(&promocode_response),
+            PromocodeResponse::Denied { .. } => HttpResponse::BadRequest().json(&promocode_response),
+        },
+        Err(err) => HttpResponse::InternalServerError().json(&err),
     }
 }
 
@@ -97,10 +102,14 @@ pub async fn get_promocode(promocode_req_json: Json<PromocodeRequest>) -> HttpRe
 ///   returns a [HttpResponse::BadRequest()] response with the error message.
 #[put("/promocode")]
 pub async fn put_promocode(promocode_json: Json<Promocode>) -> HttpResponse {
-    if db_list().iter().any(|it| it._id == promocode_json._id || it.name == promocode_json.name) {
+    if db_list()
+        .iter()
+        .any(|it| it._id() == promocode_json._id() || it.name() == promocode_json.name())
+    {
         return HttpResponse::BadRequest().json(&format!(
             "Promocode with id `{}` or name `{}` already exist.",
-            promocode_json._id, promocode_json.name
+            promocode_json._id(),
+            promocode_json.name()
         ));
     }
 

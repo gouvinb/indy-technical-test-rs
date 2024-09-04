@@ -1,9 +1,11 @@
 use clap::Parser;
 use log::{error, info, warn};
 
-use promocode_server::cli::{Cli, ENV_VAR_NAME_OPEN_WEATHER_MAP_API_KEY};
-use promocode_server::open_weather_sdk::init_open_weather_sdk;
-use promocode_server::server;
+use promocode_server::{
+    cli::{Cli, ENV_VAR_NAME_OPEN_WEATHER_MAP_API_KEY},
+    open_weather_sdk::init_open_weather_sdk,
+    server,
+};
 
 fn main() {
     env_logger::init();
@@ -17,7 +19,10 @@ fn main() {
         );
     } else {
         match init_open_weather_sdk(cli.open_weather_map_api_key) {
-            Ok(_) => info!("{} environment variable initialized.", ENV_VAR_NAME_OPEN_WEATHER_MAP_API_KEY),
+            Ok(_) => info!(
+                "{} environment variable initialized.",
+                ENV_VAR_NAME_OPEN_WEATHER_MAP_API_KEY
+            ),
             Err(err) => error!("{}", err),
         };
     }
