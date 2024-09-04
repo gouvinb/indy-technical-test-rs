@@ -1,4 +1,3 @@
-pub mod data;
-pub mod extensions;
-pub mod req;
-pub mod res;
+pub mod promocode;
+pub mod promocode_request;
+pub mod promocode_response;

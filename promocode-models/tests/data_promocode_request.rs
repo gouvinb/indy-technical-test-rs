@@ -1,51 +1,28 @@
-use promocode_models::req::promocode_request::{Arguments, Meteo, PromocodeRequest};
+use promocode_models::promocode_request::{arguments::Arguments, meteo::Meteo, PromocodeRequest};
 
 #[test]
 fn promocode_request_validation() {
-    let promocode_request_valid = PromocodeRequest {
-        promocode_name: "promocode_name".to_string(),
-        arguments: Arguments {
-            age: 42,
-            meteo: Meteo { town: "town".to_string() },
-        },
-    }
-    .validate();
+    let promocode_request_valid = PromocodeRequest::new(
+        "promocode_name".to_string(),
+        Arguments::new(42, Meteo::new("town".to_string()).unwrap()).unwrap(),
+    );
 
     assert!(promocode_request_valid.is_ok());
 
-    let promocode_request_with_empty_promocode_name = PromocodeRequest {
-        promocode_name: "".to_string(),
-        arguments: Arguments {
-            age: 42,
-            meteo: Meteo { town: "town".to_string() },
-        },
-    }
-    .validate();
+    let promocode_request_with_empty_promocode_name = PromocodeRequest::new(
+        "".to_string(),
+        Arguments::new(42, Meteo::new("town".to_string()).unwrap()).unwrap(),
+    );
 
     assert!(promocode_request_with_empty_promocode_name.is_err());
-
-    let promocode_request_with_empty_meteo_town = PromocodeRequest {
-        promocode_name: "promocode_name".to_string(),
-        arguments: Arguments {
-            age: 42,
-            meteo: Meteo { town: "".to_string() },
-        },
-    }
-    .validate();
-
-    assert!(promocode_request_with_empty_meteo_town.is_err());
 }
 
 #[test]
 fn promocode_request_serde() {
-    let promocode_request_valid = PromocodeRequest {
-        promocode_name: "WeatherCode".to_string(),
-        arguments: Arguments {
-            age: 25,
-            meteo: Meteo { town: "Lyon".to_string() },
-        },
-    }
-    .validate();
+    let promocode_request_valid = PromocodeRequest::new(
+        "WeatherCode".to_string(),
+        Arguments::new(25, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+    );
 
     assert!(promocode_request_valid.is_ok());
     let promocode_request = promocode_request_valid.unwrap();
