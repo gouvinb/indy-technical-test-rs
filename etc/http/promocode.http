@@ -41,7 +41,7 @@ Content-Type: application/json
               "@meteo": {
                 "is": "clear",
                 "temp": {
-                  "gt": "15"
+                  "gt": 15
                 }
               }
             }
@@ -71,7 +71,9 @@ Content-Type: application/json
 PUT http://localhost:8080/promocode
 Content-Type: application/json
 
-{"bad_object": ""}
+{
+  "bad_object": ""
+}
 
 
 ### Delete a promocode by name
@@ -574,7 +576,7 @@ Content-Type: application/json
       "@meteo": {
         "is": "clear",
         "temp": {
-          "gt": "15"
+          "gt": 15
         }
       }
     }
