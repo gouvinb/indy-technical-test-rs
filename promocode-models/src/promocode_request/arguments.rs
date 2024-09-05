@@ -13,7 +13,12 @@ impl Arguments {
     /// # Errors
     ///
     /// This function fails if one of field is not correct.
-    pub fn new(age: u8, meteo: Meteo) -> Result<Self, String> {
+    pub fn new(age: u8, meteo: Result<Meteo, String>) -> Result<Self, String> {
+        let meteo = match meteo {
+            Err(err_after) => return Err(format!("`meteo` {}", err_after)),
+            Ok(value) => value,
+        };
+
         Ok(Self { age, meteo })
     }
 
@@ -59,7 +64,7 @@ impl<'de> Deserialize<'de> for Arguments {
         }
 
         match ArgumentsUnsafe::deserialize(deserializer) {
-            Ok(data) => Arguments::new(data.age, data.meteo).map_err(Error::custom),
+            Ok(data) => Arguments::new(data.age, Ok(data.meteo)).map_err(Error::custom),
             Err(err) => Err(Error::custom(err)),
         }
     }

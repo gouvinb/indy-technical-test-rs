@@ -1,5 +1,6 @@
 use promocode_util::validate_type::number::BoundedU8;
 use serde::{de::Error, Deserialize, Serialize};
+use std::fmt::Debug;
 
 #[derive(Serialize, Clone, PartialEq, Debug)]
 pub struct Avantage {
@@ -14,9 +15,7 @@ impl Avantage {
     /// This function fails if `percent` is not correct.
     pub fn new(percent: u8) -> Result<Self, String> {
         let percent: BoundedU8<0, 100> = match BoundedU8::new(percent) {
-            Err(_) => {
-                return Err("`percent` must be greater than 0 and lower than 101.".to_string());
-            },
+            Err(_) => return Err("`percent` must be greater than 0 and lower than 101.".to_string()),
             Ok(value) => value,
         };
 

@@ -17,11 +17,14 @@ impl PromocodeRequest {
     /// # Errors
     ///
     /// This function fails if one of field is not correct.
-    pub fn new(promocode_name: String, arguments: Arguments) -> Result<Self, String> {
+    pub fn new(promocode_name: String, arguments: Result<Arguments, String>) -> Result<Self, String> {
         let promocode_name = match NonBlankString::new(promocode_name) {
-            Err(err_id) => {
-                return Err(format!("`promocode_name` {}", err_id));
-            },
+            Err(err_id) => return Err(format!("`promocode_name` {}", err_id)),
+            Ok(value) => value,
+        };
+
+        let arguments = match arguments {
+            Err(err_after) => return Err(format!("`arguments` {}", err_after)),
             Ok(value) => value,
         };
 
@@ -85,7 +88,7 @@ impl<'de> Deserialize<'de> for PromocodeRequest {
         }
 
         match PromocodeRequestUnsafe::deserialize(deserializer) {
-            Ok(data) => PromocodeRequest::new(data.promocode_name, data.arguments).map_err(Error::custom),
+            Ok(data) => PromocodeRequest::new(data.promocode_name, Ok(data.arguments)).map_err(Error::custom),
             Err(err) => Err(Error::custom(err)),
         }
     }

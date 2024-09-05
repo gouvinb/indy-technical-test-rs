@@ -4,14 +4,14 @@ use promocode_models::promocode_request::{arguments::Arguments, meteo::Meteo, Pr
 fn promocode_request_validation() {
     let promocode_request_valid = PromocodeRequest::new(
         "promocode_name".to_string(),
-        Arguments::new(42, Meteo::new("town".to_string()).unwrap()).unwrap(),
+        Arguments::new(42, Meteo::new("town".to_string())),
     );
 
     assert!(promocode_request_valid.is_ok());
 
     let promocode_request_with_empty_promocode_name = PromocodeRequest::new(
         "".to_string(),
-        Arguments::new(42, Meteo::new("town".to_string()).unwrap()).unwrap(),
+        Arguments::new(42, Meteo::new("town".to_string())),
     );
 
     assert!(promocode_request_with_empty_promocode_name.is_err());
@@ -21,7 +21,7 @@ fn promocode_request_validation() {
 fn promocode_request_serde() {
     let promocode_request_valid = PromocodeRequest::new(
         "WeatherCode".to_string(),
-        Arguments::new(25, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(25, Meteo::new("Lyon".to_string())),
     );
 
     assert!(promocode_request_valid.is_ok());

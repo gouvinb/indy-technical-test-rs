@@ -179,9 +179,7 @@ impl Restriction {
     /// This function fails if `Restriction::Meteo` is not correct.
     pub fn meteo(is: String, temp: Temp) -> Result<Self, String> {
         let is = match NonBlankString::new(is) {
-            Err(err_name) => {
-                return Err(format!("`is` {}", err_name));
-            },
+            Err(err_name) => return Err(format!("`is` {}", err_name)),
             Ok(value) => value,
         };
 
@@ -219,6 +217,54 @@ impl Restriction {
             is: NonBlankString::new_unchecked(is),
             temp,
         }
+    }
+
+    /// Create a new [`Restriction::And`](Self)
+    ///
+    /// # Errors
+    ///
+    /// This function fails if `Restriction::And` is not correct.
+    pub fn and(restrictions: Vec<Result<Restriction, String>>) -> Result<Self, String> {
+        match SubRestrictions::from_vec(restrictions) {
+            Err(err) => Err(err),
+            Ok(value) => Ok(Self::And(value)),
+        }
+    }
+
+    /// Create a new [Restriction::And] (unchecked)
+    ///
+    /// # Safety
+    ///
+    /// This function is marked `unsafe` because it creates a
+    /// `Restriction::And` without performing any validation on the inputs.
+    ///
+    /// This function assumes `Restriction::And` is correct.
+    pub unsafe fn and_unchecked(restrictions: SubRestrictions) -> Self {
+        Self::And(restrictions)
+    }
+
+    /// Create a new [`Restriction::Or`](Self)
+    ///
+    /// # Errors
+    ///
+    /// This function fails if `Restriction::Or` is not correct.
+    pub fn or(restrictions: Vec<Result<Restriction, String>>) -> Result<Self, String> {
+        match SubRestrictions::from_vec(restrictions) {
+            Err(err) => Err(err),
+            Ok(value) => Ok(Self::Or(value)),
+        }
+    }
+
+    /// Create a new [Restriction::Or] (unchecked)
+    ///
+    /// # Safety
+    ///
+    /// This function is marked `unsafe` because it creates a
+    /// `Restriction::Or` without performing any validation on the inputs.
+    ///
+    /// This function assumes `Restriction::Or` is correct.
+    pub unsafe fn or_unchecked(restrictions: SubRestrictions) -> Self {
+        Self::Or(restrictions)
     }
 
     /// Checks if the request satisfies one of the given [Restrictions]. Returns

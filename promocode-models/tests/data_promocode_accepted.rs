@@ -2,18 +2,18 @@ use promocode_models::{promocode::avantage::Avantage, promocode_response::Promoc
 
 #[test]
 fn promocode_accepted_validation() {
-    let promocode_accepted_valid = PromocodeResponse::accepted("promocode_name".to_string(), Avantage::new(42).unwrap());
+    let promocode_accepted_valid = PromocodeResponse::accepted("promocode_name".to_string(), Avantage::new(42));
 
     assert!(promocode_accepted_valid.is_ok());
 
-    let promocode_accepted_with_empty_promocode_name = PromocodeResponse::accepted("".to_string(), Avantage::new(42).unwrap());
+    let promocode_accepted_with_empty_promocode_name = PromocodeResponse::accepted("".to_string(), Avantage::new(42));
 
     assert!(promocode_accepted_with_empty_promocode_name.is_err());
 }
 
 #[test]
 fn promocode_accepted_serde() {
-    let promocode_accepted_valid = PromocodeResponse::accepted("WeatherCode".to_string(), Avantage::new(20).unwrap());
+    let promocode_accepted_valid = PromocodeResponse::accepted("WeatherCode".to_string(), Avantage::new(20));
 
     assert!(promocode_accepted_valid.is_ok());
     let promocode_accepted = promocode_accepted_valid.unwrap();

@@ -1,28 +1,25 @@
 use promocode_models::promocode::{
     avantage::Avantage,
-    restriction::Restriction::{self, And, Or},
+    restriction::Restriction::{self},
     temp::Temp,
     Promocode,
 };
-use promocode_util::validate_type::sequence::NonEmptyVec;
 
 #[test]
 fn promocode_validation() {
     let promocode_complex_valid = Promocode::new(
         "...".to_string(),
         "WeatherCode".to_string(),
-        Avantage::new(20).unwrap(),
+        Avantage::new(20),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Or(NonEmptyVec::new(vec![
-                Restriction::age(None, Some(40), None).unwrap(),
-                And(NonEmptyVec::new(vec![
-                    Restriction::age(Some(30), None, Some(15)).unwrap(),
-                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-                ])
-                .unwrap()),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::or(vec![
+                Restriction::age(None, Some(40), None),
+                Restriction::and(vec![
+                    Restriction::age(Some(30), None, Some(15)),
+                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+                ]),
+            ]),
         ],
     );
 
@@ -31,18 +28,16 @@ fn promocode_validation() {
     let promocode_with_empty_id = Promocode::new(
         "".to_string(),
         "WeatherCode".to_string(),
-        Avantage::new(20).unwrap(),
+        Avantage::new(20),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Or(NonEmptyVec::new(vec![
-                Restriction::age(None, Some(40), None).unwrap(),
-                And(NonEmptyVec::new(vec![
-                    Restriction::age(Some(30), None, Some(15)).unwrap(),
-                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-                ])
-                .unwrap()),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::or(vec![
+                Restriction::age(None, Some(40), None),
+                Restriction::and(vec![
+                    Restriction::age(Some(30), None, Some(15)),
+                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+                ]),
+            ]),
         ],
     );
 
@@ -51,18 +46,16 @@ fn promocode_validation() {
     let promocode_with_empty_name = Promocode::new(
         "id".to_string(),
         "".to_string(),
-        Avantage::new(20).unwrap(),
+        Avantage::new(20),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Or(NonEmptyVec::new(vec![
-                Restriction::age(None, Some(40), None).unwrap(),
-                And(NonEmptyVec::new(vec![
-                    Restriction::age(Some(30), None, Some(15)).unwrap(),
-                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-                ])
-                .unwrap()),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::or(vec![
+                Restriction::age(None, Some(40), None),
+                Restriction::and(vec![
+                    Restriction::age(Some(30), None, Some(15)),
+                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+                ]),
+            ]),
         ],
     );
 
@@ -71,18 +64,16 @@ fn promocode_validation() {
     let promocode_with_0_percent_to_avantage = Promocode::new(
         "id".to_string(),
         "name".to_string(),
-        Avantage::new(0).unwrap(),
+        Avantage::new(0),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Or(NonEmptyVec::new(vec![
-                Restriction::age(None, Some(40), None).unwrap(),
-                And(NonEmptyVec::new(vec![
-                    Restriction::age(Some(30), None, Some(15)).unwrap(),
-                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-                ])
-                .unwrap()),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::or(vec![
+                Restriction::age(None, Some(40), None),
+                Restriction::and(vec![
+                    Restriction::age(Some(30), None, Some(15)),
+                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+                ]),
+            ]),
         ],
     );
 
@@ -91,7 +82,7 @@ fn promocode_validation() {
     let promocode_without_restriction = Promocode::new(
         "id".to_string(),
         "name".to_string(),
-        Avantage::new(42).unwrap(),
+        Avantage::new(42),
         vec![],
     );
 
@@ -100,15 +91,14 @@ fn promocode_validation() {
     let promocode_implicit_or_restriction = Promocode::new(
         "...".to_string(),
         "WeatherCode".to_string(),
-        Avantage::new(20).unwrap(),
+        Avantage::new(20),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Restriction::age(None, Some(40), None).unwrap(),
-            And(NonEmptyVec::new(vec![
-                Restriction::age(Some(30), None, Some(15)).unwrap(),
-                Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::age(None, Some(40), None),
+            Restriction::and(vec![
+                Restriction::age(Some(30), None, Some(15)),
+                Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+            ]),
         ],
     );
 
@@ -120,18 +110,16 @@ fn promocode_ser_de() {
     let promocode_valid = Promocode::new(
         "...".to_string(),
         "WeatherCode".to_string(),
-        Avantage::new(20).unwrap(),
+        Avantage::new(20),
         vec![
-            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()).unwrap(),
-            Or(NonEmptyVec::new(vec![
-                Restriction::age(None, Some(40), None).unwrap(),
-                And(NonEmptyVec::new(vec![
-                    Restriction::age(Some(30), None, Some(15)).unwrap(),
-                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap(),
-                ])
-                .unwrap()),
-            ])
-            .unwrap()),
+            Restriction::date("2019-01-01".to_string(), "2020-06-30".to_string()),
+            Restriction::or(vec![
+                Restriction::age(None, Some(40), None),
+                Restriction::and(vec![
+                    Restriction::age(Some(30), None, Some(15)),
+                    Restriction::meteo("clear".to_string(), Temp { gt: 15 }),
+                ]),
+            ]),
         ],
     );
 
