@@ -11,7 +11,7 @@ fn db_use_case() {
     let promocode_0 = Promocode::new(
         "0".to_string(),
         "name 0".to_string(),
-        Avantage::new(1).unwrap(),
+        Avantage::new(1),
         vec![],
     )
     .unwrap();
@@ -19,7 +19,7 @@ fn db_use_case() {
     let promocode_1 = Promocode::new(
         "1".to_string(),
         "name 1".to_string(),
-        Avantage::new(1).unwrap(),
+        Avantage::new(1),
         vec![],
     )
     .unwrap();

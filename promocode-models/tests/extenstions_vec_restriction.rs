@@ -3,7 +3,6 @@ use promocode_models::{
     promocode::{avantage::Avantage, restriction::Restriction, restrictions::RestrictionsExt, temp::Temp, Promocode},
     promocode_request::{arguments::Arguments, meteo::Meteo, PromocodeRequest},
 };
-use promocode_util::validate_type::sequence::NonEmptyVec;
 
 #[test]
 fn check_request_date() {
@@ -13,7 +12,7 @@ fn check_request_date() {
     let promocode_with_past_date = Promocode::new(
         "id - past date".to_string(),
         "past date".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![Restriction::date(
             (now_date_naive - TimeDelta::days(365))
                 .format(date_fmt_str)
@@ -21,15 +20,14 @@ fn check_request_date() {
             (now_date_naive - TimeDelta::days(365))
                 .format(date_fmt_str)
                 .to_string(),
-        )
-        .unwrap()],
+        )],
     )
     .unwrap();
 
     let promocode_with_future_date = Promocode::new(
         "id - future date".to_string(),
         "future date".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![Restriction::date(
             (now_date_naive + TimeDelta::days(365))
                 .format(date_fmt_str)
@@ -37,15 +35,14 @@ fn check_request_date() {
             (now_date_naive + TimeDelta::days(365))
                 .format(date_fmt_str)
                 .to_string(),
-        )
-        .unwrap()],
+        )],
     )
     .unwrap();
 
     let promocode_with_in_range_date = Promocode::new(
         "id - in range".to_string(),
         "in range".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![Restriction::date(
             (now_date_naive - TimeDelta::days(30))
                 .format(date_fmt_str)
@@ -53,15 +50,14 @@ fn check_request_date() {
             (now_date_naive + TimeDelta::days(30))
                 .format(date_fmt_str)
                 .to_string(),
-        )
-        .unwrap()],
+        )],
     )
     .unwrap();
 
     let promocode_with_useless_case_date = Promocode::new(
         "id - today".to_string(),
         "today".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![
             Restriction::date(
                 (now_date_naive - TimeDelta::days(1))
@@ -70,8 +66,7 @@ fn check_request_date() {
                 (now_date_naive + TimeDelta::days(1))
                     .format(date_fmt_str)
                     .to_string(),
-            )
-            .unwrap(),
+            ),
             Restriction::date(
                 now_date_naive
                     .with_day(now_date_naive.day())
@@ -83,8 +78,7 @@ fn check_request_date() {
                     .unwrap()
                     .format(date_fmt_str)
                     .to_string(),
-            )
-            .unwrap(),
+            ),
         ],
     )
     .unwrap();
@@ -92,18 +86,17 @@ fn check_request_date() {
     let promocode_with_today_date = Promocode::new(
         "id - today".to_string(),
         "today".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![Restriction::date(
             now_date_naive.format(date_fmt_str).to_string(),
             now_date_naive.format(date_fmt_str).to_string(),
-        )
-        .unwrap()],
+        )],
     )
     .unwrap();
 
     let request = PromocodeRequest::new(
         "future date".to_string(),
-        Arguments::new(25, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(25, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 
@@ -144,39 +137,39 @@ fn check_request_age() {
     let promocode_with_eq_30_age = Promocode::new(
         "id - age testing - eq 30".to_string(),
         "age testing - eq 30".to_string(),
-        Avantage::new(10).unwrap(),
-        vec![Restriction::age(None, Some(30), None).unwrap()],
+        Avantage::new(10),
+        vec![Restriction::age(None, Some(30), None)],
     )
     .unwrap();
 
     let promocode_with_lt_30_age = Promocode::new(
         "id - age testing - lt 30".to_string(),
         "age testing - lt 30".to_string(),
-        Avantage::new(10).unwrap(),
-        vec![Restriction::age(Some(30), None, None).unwrap()],
+        Avantage::new(10),
+        vec![Restriction::age(Some(30), None, None)],
     )
     .unwrap();
 
     let promocode_with_gt_30_age = Promocode::new(
         "id - age testing - gt 30".to_string(),
         "age testing - gt 30".to_string(),
-        Avantage::new(10).unwrap(),
-        vec![Restriction::age(None, None, Some(30)).unwrap()],
+        Avantage::new(10),
+        vec![Restriction::age(None, None, Some(30))],
     )
     .unwrap();
 
     let promocode_with_range_20_40_age = Promocode::new(
         "id - age testing - range 20..40".to_string(),
         "age testing - range 20..40".to_string(),
-        Avantage::new(10).unwrap(),
-        vec![Restriction::age(Some(40), None, Some(20)).unwrap()],
+        Avantage::new(10),
+        vec![Restriction::age(Some(40), None, Some(20))],
     )
     .unwrap();
 
     let request_base = |promocode_name: String, age: u8| {
         PromocodeRequest::new(
             promocode_name,
-            Arguments::new(age, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+            Arguments::new(age, Meteo::new("Lyon".to_string())),
         )
         .unwrap()
     };
@@ -299,14 +292,14 @@ fn check_request_meteo() {
     let promocode_with_clear_15_meteo = Promocode::new(
         "id - meteo testing - clear 15".to_string(),
         "meteo testing - clear 15".to_string(),
-        Avantage::new(10).unwrap(),
-        vec![Restriction::meteo("clear".to_string(), Temp { gt: 15 }).unwrap()],
+        Avantage::new(10),
+        vec![Restriction::meteo("clear".to_string(), Temp { gt: 15 })],
     )
     .unwrap();
 
     let request = PromocodeRequest::new(
         "meteo testing - clear 15".to_string(),
-        Arguments::new(1, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(1, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 
@@ -400,41 +393,38 @@ fn check_request_and_or() {
     let promocode_with_eq_19_age_or_20_40_age = Promocode::new(
         "id - and/or testing - eq 19 or 20..40".to_string(),
         "and/or testing - eq 19 or 20..40".to_string(),
-        Avantage::new(10).unwrap(),
+        Avantage::new(10),
         vec![
-            Restriction::age(None, Some(19), None).unwrap(),
-            Restriction::And(
-                NonEmptyVec::new(vec![
-                    Restriction::age(None, None, Some(20)).unwrap(),
-                    Restriction::age(Some(40), None, None).unwrap(),
-                ])
-                .unwrap(),
-            ),
+            Restriction::age(None, Some(19), None),
+            Restriction::and(vec![
+                Restriction::age(None, None, Some(20)),
+                Restriction::age(Some(40), None, None),
+            ]),
         ],
     )
     .unwrap();
 
     let request_with_18_age = PromocodeRequest::new(
         "and/or testing - eq 19 or 20..40".to_string(),
-        Arguments::new(18, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(18, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 
     let request_with_41_age = PromocodeRequest::new(
         "and/or testing - eq 19 or 20..40".to_string(),
-        Arguments::new(41, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(41, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 
     let request_with_19_age = PromocodeRequest::new(
         "and/or testing - eq 19 or 20..40".to_string(),
-        Arguments::new(19, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(19, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 
     let request_with_30_age = PromocodeRequest::new(
         "and/or testing - eq 19 or 20..40".to_string(),
-        Arguments::new(30, Meteo::new("Lyon".to_string()).unwrap()).unwrap(),
+        Arguments::new(30, Meteo::new("Lyon".to_string())),
     )
     .unwrap();
 

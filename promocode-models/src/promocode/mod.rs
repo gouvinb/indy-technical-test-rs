@@ -1,7 +1,10 @@
-use crate::promocode_response::{reason::Reasons, PromocodeResponse};
+use crate::{
+    promocode::restriction::Restriction,
+    promocode_response::{reason::Reasons, PromocodeResponse},
+};
 use avantage::Avantage;
 use promocode_util::validate_type::string::NonBlankString;
-use restrictions::Restrictions;
+use restrictions::{Restrictions, RestrictionsExt};
 use serde::{de::Error, Deserialize, Deserializer, Serialize};
 
 pub mod avantage;
@@ -26,17 +29,30 @@ impl Promocode {
     /// # Errors
     ///
     /// This function fails if one of field is not correct.
-    pub fn new(_id: String, name: String, avantage: Avantage, restrictions: Restrictions) -> Result<Self, String> {
+    pub fn new(_id: String, name: String, avantage: Result<Avantage, String>, restrictions: Vec<Result<Restriction, String>>) -> Result<Self, String> {
         let _id = match NonBlankString::new(_id) {
-            Err(err_id) => {
-                return Err(format!("`_id` {}", err_id));
-            },
+            Err(err_id) => return Err(format!("`_id` {}", err_id)),
             Ok(value) => value,
         };
 
         let name = match NonBlankString::new(name) {
-            Err(err_name) => {
-                return Err(format!("`name` {}", err_name));
+            Err(err_name) => return Err(format!("`name` {}", err_name)),
+            Ok(value) => value,
+        };
+
+        let avantage = match avantage {
+            Err(err) => return Err(format!("`avantage` > {}", err)),
+            Ok(value) => value,
+        };
+
+        let restrictions = match Restrictions::from_vec(restrictions) {
+            Err(err) => {
+                let err_fmt = err
+                    .lines()
+                    .map(|l| format!("\t{}", l))
+                    .collect::<Vec<String>>()
+                    .join("\n");
+                return Err(format!("`restrictions` > {}", err_fmt));
             },
             Ok(value) => value,
         };
@@ -115,7 +131,7 @@ impl Promocode {
     ///
     pub fn generate_response(promocode_name: String, percent: u8, predicate: bool) -> Result<PromocodeResponse, String> {
         if predicate {
-            PromocodeResponse::accepted(promocode_name, Avantage::new(percent)?)
+            PromocodeResponse::accepted(promocode_name, Avantage::new(percent))
         } else {
             PromocodeResponse::denied(promocode_name, Reasons {})
         }
@@ -137,7 +153,13 @@ impl<'de> Deserialize<'de> for Promocode {
         }
 
         match PromocodeUnsafe::deserialize(deserializer) {
-            Ok(data) => Promocode::new(data._id, data.name, data.avantage, data.restrictions).map_err(Error::custom),
+            Ok(data) => Promocode::new(
+                data._id,
+                data.name,
+                Ok(data.avantage),
+                data.restrictions.iter().map(|it| Ok(it.clone())).collect(),
+            )
+            .map_err(Error::custom),
             Err(err) => Err(Error::custom(err)),
         }
     }

@@ -29,10 +29,15 @@ impl PromocodeResponse {
     /// # Errors
     ///
     /// This function fails if `PromocodeResponse::Accepted` is not correct.
-    pub fn accepted(promocode_name: String, avantage: Avantage) -> Result<Self, String> {
+    pub fn accepted(promocode_name: String, avantage: Result<Avantage, String>) -> Result<Self, String> {
         let promocode_name = match NonBlankString::new(promocode_name) {
-            Ok(value) => value,
             Err(err_after) => return Err(format!("`promocode_name` {}", err_after)),
+            Ok(value) => value,
+        };
+
+        let avantage = match avantage {
+            Err(err_after) => return Err(format!("`avantage` > {}", err_after)),
+            Ok(value) => value,
         };
 
         Ok(PromocodeResponse::Accepted {
@@ -82,8 +87,8 @@ impl PromocodeResponse {
     /// This function fails if `PromocodeResponse::Denied` is not correct.
     pub fn denied(promocode_name: String, reasons: Reasons) -> Result<Self, String> {
         let promocode_name = match NonBlankString::new(promocode_name) {
-            Ok(value) => value,
             Err(err_after) => return Err(format!("`promocode_name` {}", err_after)),
+            Ok(value) => value,
         };
 
         Ok(PromocodeResponse::Denied {
